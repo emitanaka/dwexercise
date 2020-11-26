@@ -1,0 +1,19 @@
+Package: dwexercise
+Type: Package
+Title: This package provides exercises for the data wrangling with R workshop
+Version: 0.1.0
+Author: Emi Tanaka
+Maintainer: Emi Tanaka <dr.emi.tanaka@gmail.com>
+Description: Install this package to launch the `learnr` exercises for the course.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    learnr,
+    gradethis
+Remotes:
+    rstudio-education/gradethis,
+    rstudio/learnr
+Depends: 
+    R (>= 2.10)
+RoxygenNote: 7.1.1
