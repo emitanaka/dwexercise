@@ -1,0 +1,177 @@
+---
+title: "Day 1 Exercise 3"
+subtitle: "Manipulating strings with `stringr`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Manipulating strings with stringr
+---
+
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
+```{r setup, include=FALSE, error = TRUE}
+library(learnr)
+library(tidyverse)
+data(awl, package = "dwexercise")
+if("gradethis" %in% installed.packages()) {
+  gradethis::gradethis_setup()
+} 
+tutorial_options(exercise.timelimit = 60,
+                 exercise.eval = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Welcome
+
+* This exercise will get you to work through the various functions in `stringr` and also let you practice using regular expressions. 
+* You will also be using some of the `dplyr` verbs you've just learnt.
+* As usual, the dataset and the `tidyverse` package (containing `dplyr` and `stringr`) have been already loaded for you.
+* Remember that there are multiple ways to achieve the answer.
+* You'll working will the Academic Word List (AWL). 
+* The AWL was developed by Averil Coxhead as her MA thesis at the School of Linguistics and Applied Language Studies at Victoria University of Wellington, New Zealand. 
+* The list contains 570 word families which were selected according to principles. 
+* The list does not include words that are in the most frequent 2000 words of English.
+* There list contains 10 sublist families ordered by their frequency such that sublist 1 contains the most common words in AWL with sublist 10 with the least common words in AWL. 
+* You can see the data set below.
+
+```{r exercise0, exercise = TRUE}
+data(awl, package = "dwexercise")
+awl
+```
+
+
+## (A) Word search
+
+
+<div class="mytask">
+How many words are there for each sublist?
+</div>
+
+```{r exercise1, exercise = TRUE}
+awl %>% 
+  ...(sublist) %>% 
+  tally() # this is from dplyr
+```
+
+```{r exercise1-check}
+grade_this({
+  df <- awl %>% 
+    group_by(sublist) %>% 
+    tally()
+  pass_if_equal(df)
+})
+```
+
+```{r exercise1-solution}
+awl %>% 
+  group_by(sublist) %>% 
+  tally()
+```
+
+<div class="mytask">
+How many words are there in AWL that ends with "tion" or "tions".
+</div>
+
+```{r exercise2, exercise = TRUE}
+sum(str_...(awl$word, ...))
+```
+
+```{r exercise2-check}
+grade_this({
+  pass_if_equal(sum(str_ends(awl$word, "tions?")))
+})
+```
+
+```{r exercise2-solution}
+sum(str_ends(awl$word, "tions?"))
+```
+
+<div class="mytask">
+How many words are there in AWL that ends with "tion" or "tions".
+</div>
+
+```{r exercise2, exercise = TRUE}
+sum(str_...(awl$word, ...))
+```
+
+```{r exercise2-check}
+grade_this({
+  pass_if_equal(sum(str_ends(awl$word, "tions?")))
+})
+```
+
+```{r exercise2-solution}
+sum(str_ends(awl$word, "tions?"))
+```
+
+<div class="mytask">
+What are the shortest and the longest words in AWL that end with "ed"? Have your last output with these words in a vector ordered alphabetically. 
+</div>
+
+```{r exercise2, exercise = TRUE}
+awl %>% 
+  ...(...(word, "ed")) %>% 
+  ...(length = ...(word)) %>% 
+  ...(length %in% c(max(length), min(length))) %>% 
+  arrange(word) %>% 
+  pull(word)
+```
+
+```{r exercise2-check}
+grade_this({
+  out <- awl %>% 
+    filter(str_ends(word, "ed")) %>% 
+    mutate(length = str_length(word)) %>% 
+    filter(length %in% c(max(length), min(length))) %>% 
+    arrange(word) %>% 
+    pull(word)
+  
+  pass_if_equal(out)
+})
+```
+
+```{r exercise2-solution}
+awl %>% 
+  filter(str_ends(word, "ed")) %>% 
+  mutate(length = str_length(word)) %>% 
+  filter(length %in% c(max(length), min(length))) %>% 
+  arrange(word) %>% 
+  pull(word)
+```
+
+
+<div class="mytask">
+
+</div>
+
+```{r exercise3, exercise = TRUE}
+
+```
+
+```{r exercise3-check}
+grade_this({
+
+  
+  pass_if_equal(out)
+})
+```
+
+```{r exercise3-solution}
+
+```

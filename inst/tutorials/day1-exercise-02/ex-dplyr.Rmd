@@ -1,0 +1,428 @@
+---
+title: "Day 1 Exercise 2"
+subtitle: "Data manipulation with `dplyr`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Main dplyr verbs, tidyselect and rlang
+---
+
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
+```{r setup, include=FALSE, error = TRUE}
+library(learnr)
+library(dwexercise)
+library(tidyverse)
+library(testthat)
+if("gradethis" %in% installed.packages()) {
+  gradethis::gradethis_setup()
+} 
+frogsignal <- dwexercise::frogsignal
+tutorial_options(exercise.timelimit = 60,
+                 exercise.eval = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Welcome
+
+* This exercise is going to help you practice:
+   * using the main verbs in dplyr 
+   * select columns using tidyselect
+   * writing functions that include dplyr functions (i.e. get used to tidy evaluation)
+   
+* We will be using the `frogsignal` data from the `dwexercise` R-package that was specially designed for this workshop. If you want to know more about this data, type `help(frogsignal, package = "dwexercise")` in your R console (provided that you installed the `dwexercise` package) to see the documentation on this data. Note: `help` functions don't work well in `learnr` shiny app, so make sure you do this from your own computer.
+
+* Run the code below to study the data structure
+
+```{r exercise0, exercise = TRUE}
+data(frogsignal, package = "dwexercise")
+frogsignal
+```
+
+* `tidyverse` package and the `frogsignal` data has been loaded for you for all exercises
+
+
+## (A) Using the main dplyr verbs
+
+The following are the main `dplyr` verbst that you will practice:
+
+* `mutate` - modify or add column
+* `filter` or `slice` - subset rows by condition or index
+* `arrange` - rearrange rows
+* `group_by` usually followed by `summarise` - calculate summary statistics by group
+* `select` - select columns
+
+<div class="mytask">
+Create a new column called `StandardTotal` which is the the sum of `Standard1`, `Standard2` and `Standard3`?
+</div>
+
+```{r exercise1, exercise = TRUE}
+frogsignal %>% 
+  ...(...)
+```
+
+```{r exercise1-check}
+grade_this({
+  pass_if_equal(mutate(frogsignal, StandardTotal = Standard1 + Standard2 + Standard3))
+})
+```
+
+```{r exercise1-solution}
+frogsignal %>% 
+  mutate(StandardTotal = Standard1 + Standard2 + Standard3)
+```
+
+<details><summary>Hint</summary>
+
+If you're having trouble, do you happen to be using the `sum` function? Do you think the following operations are the same? Try running the code to see.
+
+```{r hint1-1, exercise = TRUE}
+x1 <- c(1, 3, 10)
+x2 <- c(3, 4, 3)
+x3 <- c(4, 5, 1)
+sum(x1, x2, x3)
+```
+
+```{r hint1-2, exercise = TRUE, exercise.setup = "hint1-1"}
+x1 + x2 + x3
+```
+
+
+</details>
+
+
+<div class="mytask">
+Calculate the _average_ call duration (`AlternativeCD`) and its _sample standard deviation_ for every combination of the speaker position (`SpeakerPosition`) and which call was first presented (`FirstPresented`). Arrange the resulting summary data frame so that the rows are ordered from the lowest to highest average call duration.
+</div>
+
+```{r exercise2, exercise = TRUE}
+frogsignal %>% 
+  ...(SpeakerPosition, FirstPresented) %>% 
+  ...(CDavg = ...,
+      CDsd = ...) %>% 
+  ...(CDavg)
+```
+
+```{r exercise2-check}
+grade_this({
+ df2 <- frogsignal %>% 
+  group_by(SpeakerPosition, FirstPresented) %>% 
+  summarise(CDavg = mean(AlternativeCD),
+            CDsd = sd(AlternativeCD)) %>% 
+  arrange(CDavg)
+ pass_if_equal(df2)
+})
+```
+
+```{r exercise2-solution}
+frogsignal %>% 
+  group_by(SpeakerPosition, FirstPresented) %>% 
+  summarise(CDavg = mean(AlternativeCD),
+            CDsd = sd(AlternativeCD)) %>% 
+  arrange(CDavg)
+```
+
+<div class="mytask">
+Subset the data to rows where speaker position (`SpeakerPosition`) is missing and select the columns `TwoChoice` and `FirstPresented`.
+</div>
+
+```{r exercise3, exercise = TRUE}
+frogsignal %>% 
+  ...(...) %>% 
+  ...(TwoChoice, FirstPresented)
+```
+
+```{r exercise3-check}
+grade_this({
+  df3 <- frogsignal %>% 
+    filter(is.na(SpeakerPosition)) %>% 
+    select(TwoChoice, FirstPresented)
+  pass_if_equal(df3)
+})
+```
+
+```{r exercise3-solution}
+frogsignal %>% 
+  filter(is.na(SpeakerPosition)) %>% 
+  select(TwoChoice, FirstPresented)
+```
+
+<div class="mytask">
+For a given pair of latent responses, woth names stored in objects `choice1` and `choice2`, filter the data so that the value of `choice1` variable is larger than the value of `choice2`. 
+</div>
+
+```{r exercise4, exercise = TRUE}
+choice1 <- "Alternative1"
+choice2 <- "Standard1"
+frogsignal %>% 
+  filter(...[[choice1]] > ...[[choice2]]) 
+```
+
+<details><summary>Hint</summary>
+Recall that a data.frame is a special type of list and you can extract an element in a list by using `[[`.
+</details>
+
+```{r exercise4-check}
+grade_this({
+  choice1 <- "Alternative1"
+  choice2 <- "Standard1"
+  df <- frogsignal %>% 
+    filter(.data[[choice1]] > .data[[choice2]]) 
+  pass_if_equal(df)
+})
+```
+
+```{r exercise4-solution}
+choice1 <- "Alternative1"
+choice2 <- "Standard1"
+frogsignal %>% 
+  filter(.data[[choice1]] > .data[[choice2]]) 
+```
+
+
+## (B) Tidy select
+
+<div class="mytask">
+Select the columns with response latencies with column ordered as `Standard1`, `Standard2`, `Standard3`, `Alternative1`, `Alternative2`, and `Alternative3`. Try to use an approach that doesn't require you to type each column name out. 
+</div>
+
+```{r exercise5, exercise = TRUE}
+frogsignal %>% 
+  select(...)
+```
+
+```{r exercise5-check}
+grade_this({
+  df <- frogsignal %>% 
+    select(num_range("Standard", 1:3) | num_range("Alternative", 1:3))
+  pass_if_equal(df)
+})
+```
+
+```{r exercise5-solution}
+frogsignal %>% 
+  select(num_range("Standard", 1:3) | num_range("Alternative", 1:3))
+```
+
+
+* One thing we didn't go through was that you can in fact _rename_ columns as you select. 
+* Try running the code below and have a look at the column names.
+
+```{r helper6A, exercise = TRUE}
+frogsignal %>% 
+  select(CD = AlternativeCD,
+         CR = AlternativeCR,
+         DF = AlternativeDF,
+         RA = AlternativeRA,
+         PR = AlternativePR)
+```
+
+* This is the same as the code below.
+
+```{r helper6B, exercise = TRUE}
+frogsignal %>% 
+  select(AlternativeCD:AlternativePR) %>% 
+  rename(CD = AlternativeCD,
+         CR = AlternativeCR,
+         DF = AlternativeDF,
+         RA = AlternativeRA,
+         PR = AlternativePR)
+```
+
+* But you can see that there is a pattern above where we are essentially dropping the string "Alternative" from the name. When there is a pattern like this, it is easier to use a functional approach using `rename_with`.
+
+```{r helper6C, exercise = TRUE}
+frogsignal %>% 
+  select(AlternativeCD:AlternativePR) %>% 
+  rename_with(function(x) gsub("Alternative", "", x))
+```
+
+<div class="mytask">
+Select all columns that contain "Alternative" in its name and rename so that the independent variables (`AlternativeCD:AlternativePR`) have the string "Alternative" dropped, the latent responses, `Alternative1`, `Alternative2`, `Alternative3` renamed to `a1`, `a2` and `a3`, respectively and `AlternativeAverage` renamed to `avg`.
+</div>
+
+```{r exercise6, exercise = TRUE}
+frogsignal %>% 
+  select(...(...)) %>% 
+  rename_with(..., .cols = ...) %>% 
+  rename_with(..., .cols = ...) %>% 
+  rename(... = AlternativeAverage)
+```
+
+```{r exercise6-check}
+grade_this({
+  df <- frogsignal %>% 
+    select(contains("Alternative")) %>% 
+    rename_with(function(x) gsub("Alternative", "", x), .cols = AlternativeCD:AlternativePR) %>% 
+    rename_with(function(x) gsub("Alternative", "a", x), .cols = num_range("Alternative", 1:3)) %>% 
+    rename(avg = AlternativeAverage)
+  pass_if_equal(df)
+})
+```
+
+```{r exercise6-solution}
+frogsignal %>% 
+  select(contains("Alternative")) %>% 
+  rename_with(function(x) gsub("Alternative", "", x), .cols = AlternativeCD:AlternativePR) %>% 
+  rename_with(function(x) gsub("Alternative", "a", x), .cols = num_range("Alternative", 1:3)) %>% 
+  rename(avg = AlternativeAverage)
+```
+
+<div class="mytask">
+Select columns based on a object that contains a vector of strings with the experimental design variables, `FrogID`, `AlternativeCD`, `AlternativeCR`, `AlternativeDF`, `AlternativeRA`, `AlternativePR`, `SpeakerPosition` and `FirstPresented`. You may need to use a selection language that you haven't seen in action yet.
+</div>
+
+```{r exercise7, exercise = TRUE}
+exp_vars <- c("FrogID", "AlternativeCD", "AlternativeCR",
+              "AlternativeDF", "AlternativeRA", "AlternativePR",
+              "SpeakerPosition", "FirstPresented")
+frogsignal %>% 
+  select(...(exp_vars))
+```
+
+```{r exercise7-check}
+grade_this({
+  exp_vars <- c("FrogID", "AlternativeCD", "AlternativeCR",
+                "AlternativeDF", "AlternativeRA", "AlternativePR",
+                "SpeakerPosition", "FirstPresented")
+  df <- frogsignal %>% 
+    select(all_of(exp_vars))
+  pass_if_equal(df)
+})
+```
+
+```{r exercise7-solution}
+exp_vars <- c("FrogID", "AlternativeCD", "AlternativeCR",
+              "AlternativeDF", "AlternativeRA", "AlternativePR",
+              "SpeakerPosition", "FirstPresented")
+frogsignal %>% 
+  select(all_of(exp_vars))
+```
+
+<div class="mytask">
+Select every character variable in `frogsignal` data. You may need to use a selection language that you haven't seen in action yet.
+</div>
+
+```{r exercise8, exercise = TRUE}
+frogsignal %>% 
+  select(...(is.character))
+```
+
+```{r exercise8-check}
+grade_this({
+  df <- frogsignal %>% 
+    select(where(is.character))
+  pass_if_equal(df)
+})
+```
+
+```{r exercise8-solution}
+frogsignal %>% 
+  select(where(is.character))
+```
+
+
+## (C) Tidy evaluation
+
+* Tidyverse makes plenty use of tidy evaluation. This makes the data analysis easier in some cases, however, it can make creating functions based on it a bit tricky. 
+* Below you'll make functions based on `dplyr` verbs.
+
+<div class="mytask">
+Create a function called `compare` that calculates the mean difference of two user chosen latent response, given as `alt` and `std`, where the first one should match the name for latent responses to alternative call and the latter should match the name for latest reponses to standard call. The arguments should be passed as a string, selected from latent responses. Use your function to compare `Alternative3` and `Standard2`.
+</div>
+
+```{r exercise9, exercise = TRUE}
+compare <- function(alt = paste0("Alternative", 1:3), 
+                    std = paste0("Standard", 1:3)) {
+  alt <- match.arg(alt)
+  std <- match.arg(std)
+
+  frogsignal %>% 
+    mutate(diff = ... - ...) %>% 
+    pull(diff) %>% 
+    mean(na.rm = TRUE)
+}
+
+compare("Alternative3", "Standard2")
+```
+
+```{r exercise9-check}
+grade_this({
+  val <- frogsignal %>% 
+        mutate(diff = Alternative3 - Standard2) %>% 
+        pull(diff) %>% 
+        mean(na.rm = TRUE)
+  
+  pass_if_equal(val)
+})
+```
+
+```{r exercise9-solution}
+compare <- function(alt = paste0("Alternative", 1:3), 
+                    std = paste0("Standard", 1:3)) {
+  alt <- match.arg(alt)
+  std <- match.arg(std)
+
+  frogsignal %>% 
+    mutate(diff = .data[[alt]] - .data[[std]]) %>% 
+    pull(diff) %>% 
+    mean(na.rm = TRUE)
+}
+
+compare("Alternative3", "Standard2")
+```
+
+
+<div class="mytask">
+Fill the code below where it has "...". This is like the previous function except you can give any arbitrary data and refer to columns in the data without quoting them.
+</div>
+
+```{r exercise10, exercise = TRUE}
+compare_nse <- function(data, alt, std) {
+  data %>% 
+    mutate(diff = ... - ...) %>% 
+    pull(diff) %>% 
+    mean(na.rm = TRUE)
+}
+
+compare_nse(frogsignal, Alternative3, Standard2)
+```
+
+```{r exercise10-check}
+grade_this({
+  val <- frogsignal %>% 
+      mutate(diff = Alternative3 - Standard2) %>% 
+      pull(diff) %>% 
+      mean(na.rm = TRUE)
+
+  # this actually doesn't check that people used NSE though!
+  pass_if_equal(val)
+})
+```
+
+```{r exercise10-solution}
+compare_nse <- function(data, alt, std) {
+  data %>% 
+    mutate(diff = {{alt}} - {{std}}) %>% 
+    pull(diff) %>% 
+    mean(na.rm = TRUE)
+}
+
+compare_nse(frogsignal, Alternative3, Standard2)
+```

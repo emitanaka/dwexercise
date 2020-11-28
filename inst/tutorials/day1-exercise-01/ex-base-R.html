@@ -135,7 +135,8 @@ $(document).ready(function () {
 <ul>
 <li>This exercise is a revision of your knowledge in Base R.</li>
 <li><strong>You should complete the task <em>without</em> loading any extra packages.</strong></li>
-<li>Note that answers can be achieved in multiple ways.</li>
+<li><strong>Note that answers can be achieved in multiple ways.</strong></li>
+<li>The solution just shows one way to achieve the answer.</li>
 <li>You’ll working through the <code>mtcars</code> dataset.</li>
 <li>Try pushing the <code>Run code</code> button. You should see the data frame output.</li>
 </ul>
@@ -164,6 +165,7 @@ $(document).ready(function () {
 <p>Extract every odd row from <code>mtcars</code>.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise1" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars[..., ]</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise1-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -179,6 +181,8 @@ $(document).ready(function () {
 <p>Delete the <code>wt</code> column from <code>mtcars</code>. Remember to output the data frame after you delete it.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise2" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars$wt &lt;- ...
+mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise2-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -189,6 +193,7 @@ mtcars</code></pre>
 <p>Delete the first five rows from <code>mtcars</code>. Remember to output the data frame after you delete it.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise3" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise3-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -201,6 +206,7 @@ mtcars</code></pre>
 <p>Find the number of rows for <code>mtcars</code>.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise4" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>...(mtcars)</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise4-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -210,6 +216,7 @@ mtcars</code></pre>
 <p>Find the number of columns for <code>mtcars</code>.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise5" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>...(mtcars)</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise5-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -222,6 +229,7 @@ mtcars</code></pre>
 <p>Get the row names of the data.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise6" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>...(mtcars)</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise6-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -231,6 +239,7 @@ mtcars</code></pre>
 <p>Create a new column called <code>brand</code> that contains the row names of <code>mtcars</code>. The <code>brand</code> column should be the last column in the data frame. Remember to output the data frame.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise7" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise7-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -244,6 +253,13 @@ mtcars</code></pre>
 <p>For every transmission level stored as <code>am</code> in <code>mtcars</code> (0 = automatic, 1 = manual), calculate the five number summary (min, Q1, Q2, Q3, max) of the horsepower, <code>hp</code>. Your output should be a data frame with columns <code>am</code>, <code>min</code>, <code>q1</code>, <code>med</code>, <code>q3</code> and <code>max</code>. Use <code>quantile</code> <code>type = 2</code> or equivalent for the calculation of Q1 and Q3. The <code>am</code> should be character.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise8" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>min &lt;- ...
+q1 &lt;- ...(..., ..., function(x) quantile(x, 0.25, type = 2))
+med &lt;- ...
+q3 &lt;- ...
+max &lt;- ...
+data.frame(am = names(min),
+           min = min, q1 = q1, med = med, q3 = q3, max = max)</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise8-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -263,9 +279,13 @@ data.frame(am = names(min),
 <div id="section-f-conditional-values" class="section level2">
 <h2>(F) Conditional values</h2>
 <div class="mytask">
-<p>For every variable in <code>mtcars</code> that is less than its average, set it to 0.</p>
+<p>For every cell in <code>mtcars</code>, set the value to 0 if its value is less than the average of its column.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise9" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>for(nm in names(mtcars)) {
+  mtcars[[nm]][... &lt; mean(...)] &lt;- 0
+}
+mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise9-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -281,6 +301,7 @@ mtcars</code></pre>
 <p>Rename the column <code>wt</code> to <code>weight</code> and <code>hp</code> to <code>horsepower</code> for <code>mtcars</code>.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise10" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise10-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -296,6 +317,7 @@ mtcars</code></pre>
 <p>Relocate <code>mpg</code> so that it appears after <code>vs</code> in <code>mtcars</code>.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise11" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>mtcars</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise11-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -386,8 +408,8 @@ output$`tutorial-exercise-exercise0B-output` <- renderUI({
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_cache("exercise0B", list(setup = NULL, chunks = list(list(label = "exercise0B", code = "mtcars[, \"mpg\"]", 
     opts = list(label = "\"exercise0B\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, mtcars[, \"mpg\"]))", ")"), chunk_opts = list(
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  pass_if_equal(mtcars[, \"mpg\"])", "})"), chunk_opts = list(
     label = "exercise0B-check")), solution = NULL, options = list(
     eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
     tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
@@ -419,11 +441,11 @@ output$`tutorial-exercise-exercise1-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list(label = "exercise1", code = "", 
+learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list(label = "exercise1", code = "mtcars[..., ]", 
     opts = list(label = "\"exercise1\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, mtcars[c(TRUE, FALSE), ]))", ")"
-), chunk_opts = list(label = "exercise1-check")), solution = structure("mtcars[c(TRUE, FALSE), ]", chunk_opts = list(
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  pass_if_equal(mtcars[c(TRUE, FALSE), ])", "})"), chunk_opts = list(
+    label = "exercise1-check")), solution = structure("mtcars[c(TRUE, FALSE), ]", chunk_opts = list(
     label = "exercise1-solution")), options = list(eval = FALSE, 
     echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
     collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
@@ -442,9 +464,9 @@ learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list
     purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
     exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
     exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise1", exercise = TRUE, code = "", out.width.px = 624, 
-    out.height.px = 384, params.src = "exercise1, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+    label = "exercise1", exercise = TRUE, code = "mtcars[..., ]", 
+    out.width.px = 624, out.height.px = 384, params.src = "exercise1, exercise = TRUE", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -455,11 +477,11 @@ output$`tutorial-exercise-exercise2-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise2", list(setup = NULL, chunks = list(list(label = "exercise2", code = "", 
+learnr:::store_exercise_cache("exercise2", list(setup = NULL, chunks = list(list(label = "exercise2", code = "mtcars$wt <- ...\nmtcars", 
     opts = list(label = "\"exercise2\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("df <- mtcars", 
-"df$wt <- NULL", "grade_result(", "  pass_if(~identical(.result, df))", 
-")"), chunk_opts = list(label = "exercise2-check")), solution = structure(c("mtcars$wt <- NULL", 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  df <- mtcars", "  df$wt <- NULL", "  pass_if_equal(df)", "})"
+), chunk_opts = list(label = "exercise2-check")), solution = structure(c("mtcars$wt <- NULL", 
 "mtcars"), chunk_opts = list(label = "exercise2-solution")), 
     options = list(eval = FALSE, echo = TRUE, results = "markup", 
         tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
@@ -480,9 +502,9 @@ learnr:::store_exercise_cache("exercise2", list(setup = NULL, chunks = list(list
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise2", exercise = TRUE, code = "", out.width.px = 624, 
-        out.height.px = 384, params.src = "exercise2, exercise = TRUE", 
-        fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+        label = "exercise2", exercise = TRUE, code = c("mtcars$wt <- ...", 
+        "mtcars"), out.width.px = 624, out.height.px = 384, params.src = "exercise2, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -493,10 +515,10 @@ output$`tutorial-exercise-exercise3-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise3", list(setup = NULL, chunks = list(list(label = "exercise3", code = "", 
+learnr:::store_exercise_cache("exercise3", list(setup = NULL, chunks = list(list(label = "exercise3", code = "mtcars", 
     opts = list(label = "\"exercise3\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, mtcars[-c(1:5), ]))", ")"), chunk_opts = list(
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(mtcars[-c(1:5), ])", ")"), chunk_opts = list(
     label = "exercise3-check")), solution = structure("mtcars[-c(1:5), ]", chunk_opts = list(
     label = "exercise3-solution")), options = list(eval = FALSE, 
     echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
@@ -516,9 +538,9 @@ learnr:::store_exercise_cache("exercise3", list(setup = NULL, chunks = list(list
     purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
     exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
     exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise3", exercise = TRUE, code = "", out.width.px = 624, 
+    label = "exercise3", exercise = TRUE, code = "mtcars", out.width.px = 624, 
     out.height.px = 384, params.src = "exercise3, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -529,32 +551,33 @@ output$`tutorial-exercise-exercise4-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list(label = "exercise4", code = "", 
+learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list(label = "exercise4", code = "...(mtcars)", 
     opts = list(label = "\"exercise4\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, nrow(mtcars)))", ")"), chunk_opts = list(
-    label = "exercise4-check")), solution = structure("nrow(mtcars)", chunk_opts = list(
-    label = "exercise4-solution")), options = list(eval = FALSE, 
-    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
-    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
-    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
-    cache = 0, cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
-    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
-    fig.keep = "high", fig.show = "asis", fig.align = "default", 
-    fig.path = "ex-base-R_files/figure-html/", dev = "png", dev.args = NULL, 
-    dpi = 192, fig.ext = "png", fig.width = 6.5, fig.height = 4, 
-    fig.env = "figure", fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", 
-    fig.subcap = NULL, fig.pos = "", out.width = 624, out.height = NULL, 
-    out.extra = NULL, fig.retina = 2, external = TRUE, sanitize = FALSE, 
-    interval = 1, aniopts = "controls,loop", warning = TRUE, 
-    error = TRUE, message = TRUE, render = NULL, ref.label = NULL, 
-    child = NULL, engine = "r", split = FALSE, include = TRUE, 
-    purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
-    exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
-    exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise4", exercise = TRUE, code = "", out.width.px = 624, 
-    out.height.px = 384, params.src = "exercise4, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(nrow(mtcars))", ")"), chunk_opts = list(label = "exercise4-check")), 
+    solution = structure("nrow(mtcars)", chunk_opts = list(label = "exercise4-solution")), 
+    options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-base-R_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise4", exercise = TRUE, code = "...(mtcars)", 
+        out.width.px = 624, out.height.px = 384, params.src = "exercise4, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -565,32 +588,33 @@ output$`tutorial-exercise-exercise5-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise5", list(setup = NULL, chunks = list(list(label = "exercise5", code = "", 
+learnr:::store_exercise_cache("exercise5", list(setup = NULL, chunks = list(list(label = "exercise5", code = "...(mtcars)", 
     opts = list(label = "\"exercise5\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, ncol(mtcars)))", ")"), chunk_opts = list(
-    label = "exercise5-check")), solution = structure("ncol(mtcars)", chunk_opts = list(
-    label = "exercise5-solution")), options = list(eval = FALSE, 
-    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
-    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
-    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
-    cache = 0, cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
-    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
-    fig.keep = "high", fig.show = "asis", fig.align = "default", 
-    fig.path = "ex-base-R_files/figure-html/", dev = "png", dev.args = NULL, 
-    dpi = 192, fig.ext = "png", fig.width = 6.5, fig.height = 4, 
-    fig.env = "figure", fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", 
-    fig.subcap = NULL, fig.pos = "", out.width = 624, out.height = NULL, 
-    out.extra = NULL, fig.retina = 2, external = TRUE, sanitize = FALSE, 
-    interval = 1, aniopts = "controls,loop", warning = TRUE, 
-    error = TRUE, message = TRUE, render = NULL, ref.label = NULL, 
-    child = NULL, engine = "r", split = FALSE, include = TRUE, 
-    purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
-    exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
-    exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise5", exercise = TRUE, code = "", out.width.px = 624, 
-    out.height.px = 384, params.src = "exercise5, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(ncol(mtcars))", ")"), chunk_opts = list(label = "exercise5-check")), 
+    solution = structure("ncol(mtcars)", chunk_opts = list(label = "exercise5-solution")), 
+    options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-base-R_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise5", exercise = TRUE, code = "...(mtcars)", 
+        out.width.px = 624, out.height.px = 384, params.src = "exercise5, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -601,10 +625,10 @@ output$`tutorial-exercise-exercise6-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise6", list(setup = NULL, chunks = list(list(label = "exercise6", code = "", 
+learnr:::store_exercise_cache("exercise6", list(setup = NULL, chunks = list(list(label = "exercise6", code = "...(mtcars)", 
     opts = list(label = "\"exercise6\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, rownames(mtcars)))", ")"), chunk_opts = list(
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(rownames(mtcars))", ")"), chunk_opts = list(
     label = "exercise6-check")), solution = structure("rownames(mtcars)", chunk_opts = list(
     label = "exercise6-solution")), options = list(eval = FALSE, 
     echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
@@ -624,9 +648,9 @@ learnr:::store_exercise_cache("exercise6", list(setup = NULL, chunks = list(list
     purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
     exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
     exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise6", exercise = TRUE, code = "", out.width.px = 624, 
-    out.height.px = 384, params.src = "exercise6, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+    label = "exercise6", exercise = TRUE, code = "...(mtcars)", 
+    out.width.px = 624, out.height.px = 384, params.src = "exercise6, exercise = TRUE", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -637,11 +661,11 @@ output$`tutorial-exercise-exercise7-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise7", list(setup = NULL, chunks = list(list(label = "exercise7", code = "", 
+learnr:::store_exercise_cache("exercise7", list(setup = NULL, chunks = list(list(label = "exercise7", code = "mtcars", 
     opts = list(label = "\"exercise7\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("mtcars$brand <- rownames(mtcars)", 
-"grade_result(", "  pass_if(~identical(.result, mtcars))", ")"
-), chunk_opts = list(label = "exercise7-check")), solution = structure(c("mtcars$brand <- rownames(mtcars)", 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  mtcars$brand <- rownames(mtcars)", "  pass_if_equal(mtcars)", 
+"})"), chunk_opts = list(label = "exercise7-check")), solution = structure(c("mtcars$brand <- rownames(mtcars)", 
 "mtcars"), chunk_opts = list(label = "exercise7-solution")), 
     options = list(eval = FALSE, echo = TRUE, results = "markup", 
         tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
@@ -662,9 +686,9 @@ learnr:::store_exercise_cache("exercise7", list(setup = NULL, chunks = list(list
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise7", exercise = TRUE, code = "", out.width.px = 624, 
-        out.height.px = 384, params.src = "exercise7, exercise = TRUE", 
-        fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+        label = "exercise7", exercise = TRUE, code = "mtcars", 
+        out.width.px = 624, out.height.px = 384, params.src = "exercise7, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -675,43 +699,48 @@ output$`tutorial-exercise-exercise8-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise8", list(setup = NULL, chunks = list(list(label = "exercise8", code = "", 
+learnr:::store_exercise_cache("exercise8", list(setup = NULL, chunks = list(list(label = "exercise8", code = "min <- ...\nq1 <- ...(..., ..., function(x) quantile(x, 0.25, type = 2))\nmed <- ...\nq3 <- ...\nmax <- ...\ndata.frame(am = names(min),\n           min = min, q1 = q1, med = med, q3 = q3, max = max)", 
     opts = list(label = "\"exercise8\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("min <- tapply(mtcars$hp, mtcars$am, min)", 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("", 
+"grade_this({  ", "  min <- tapply(mtcars$hp, mtcars$am, min)", 
 "q1 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.25, type = 2))", 
 "med <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.5, type = 2))", 
 "q3 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.75, type = 2))", 
 "max <- tapply(mtcars$hp, mtcars$am, max)", "df <- data.frame(am = names(min),", 
 "                 min = min, q1 = q1, med = med, q3 = q3, max = max)", 
-"grade_result(", "  pass_if(~identical(.result, df))", ")"), chunk_opts = list(
-    label = "exercise8-check")), solution = structure(c("min <- tapply(mtcars$hp, mtcars$am, min)", 
-"q1 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.25, type = 2))", 
-"med <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.5, type = 2))", 
-"q3 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.75, type = 2))", 
-"max <- tapply(mtcars$hp, mtcars$am, max)", "data.frame(am = names(min),", 
-"           min = min, ", "           q1 = q1, ", "           med = med, ", 
-"           q3 = q3, ", "           max = max)"), chunk_opts = list(
-    label = "exercise8-solution")), options = list(eval = FALSE, 
-    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
-    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
-    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
-    cache = 0, cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
-    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
-    fig.keep = "high", fig.show = "asis", fig.align = "default", 
-    fig.path = "ex-base-R_files/figure-html/", dev = "png", dev.args = NULL, 
-    dpi = 192, fig.ext = "png", fig.width = 6.5, fig.height = 4, 
-    fig.env = "figure", fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", 
-    fig.subcap = NULL, fig.pos = "", out.width = 624, out.height = NULL, 
-    out.extra = NULL, fig.retina = 2, external = TRUE, sanitize = FALSE, 
-    interval = 1, aniopts = "controls,loop", warning = TRUE, 
-    error = TRUE, message = TRUE, render = NULL, ref.label = NULL, 
-    child = NULL, engine = "r", split = FALSE, include = TRUE, 
-    purl = TRUE, max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
-    exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
-    exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise8", exercise = TRUE, code = "", out.width.px = 624, 
-    out.height.px = 384, params.src = "exercise8, exercise = TRUE", 
-    fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+"  pass_if_equal(df)", "})"), chunk_opts = list(label = "exercise8-check")), 
+    solution = structure(c("min <- tapply(mtcars$hp, mtcars$am, min)", 
+    "q1 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.25, type = 2))", 
+    "med <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.5, type = 2))", 
+    "q3 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.75, type = 2))", 
+    "max <- tapply(mtcars$hp, mtcars$am, max)", "data.frame(am = names(min),", 
+    "           min = min, ", "           q1 = q1, ", "           med = med, ", 
+    "           q3 = q3, ", "           max = max)"), chunk_opts = list(
+        label = "exercise8-solution")), options = list(eval = FALSE, 
+        echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
+        collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
+        strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
+        cache = 0, cache.path = "ex-base-R_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-base-R_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise8", exercise = TRUE, code = c("min <- ...", 
+        "q1 <- ...(..., ..., function(x) quantile(x, 0.25, type = 2))", 
+        "med <- ...", "q3 <- ...", "max <- ...", "data.frame(am = names(min),", 
+        "           min = min, q1 = q1, med = med, q3 = q3, max = max)"
+        ), out.width.px = 624, out.height.px = 384, params.src = "exercise8, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -722,13 +751,13 @@ output$`tutorial-exercise-exercise9-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise9", list(setup = NULL, chunks = list(list(label = "exercise9", code = "", 
+learnr:::store_exercise_cache("exercise9", list(setup = NULL, chunks = list(list(label = "exercise9", code = "for(nm in names(mtcars)) {\n  mtcars[[nm]][... < mean(...)] <- 0\n}\nmtcars", 
     opts = list(label = "\"exercise9\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("for(nm in names(mtcars)) mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0", 
-"grade_result(", "  pass_if(~identical(.result, mtcars))", ")"
-), chunk_opts = list(label = "exercise9-check")), solution = structure(c("for(nm in names(mtcars))  {", 
-"  mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0", "}", 
-"mtcars"), chunk_opts = list(label = "exercise9-solution")), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  for(nm in names(mtcars)) mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0", 
+"  pass_if_equal(mtcars)", "})"), chunk_opts = list(label = "exercise9-check")), 
+    solution = structure(c("for(nm in names(mtcars))  {", "  mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0", 
+    "}", "mtcars"), chunk_opts = list(label = "exercise9-solution")), 
     options = list(eval = FALSE, echo = TRUE, results = "markup", 
         tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
         comment = NA, highlight = FALSE, strip.white = TRUE, 
@@ -748,9 +777,10 @@ learnr:::store_exercise_cache("exercise9", list(setup = NULL, chunks = list(list
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise9", exercise = TRUE, code = "", out.width.px = 624, 
-        out.height.px = 384, params.src = "exercise9, exercise = TRUE", 
-        fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+        label = "exercise9", exercise = TRUE, code = c("for(nm in names(mtcars)) {", 
+        "  mtcars[[nm]][... < mean(...)] <- 0", "}", "mtcars"
+        ), out.width.px = 624, out.height.px = 384, params.src = "exercise9, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -761,10 +791,10 @@ output$`tutorial-exercise-exercise10-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise10", list(setup = NULL, chunks = list(list(label = "exercise10", code = "", 
+learnr:::store_exercise_cache("exercise10", list(setup = NULL, chunks = list(list(label = "exercise10", code = "mtcars", 
     opts = list(label = "\"exercise10\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, dplyr::rename(mtcars, weight = wt, horsepower = hp)))", 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(dplyr::rename(mtcars, weight = wt, horsepower = hp))", 
 ")"), chunk_opts = list(label = "exercise10-check")), solution = structure(c("nm <- names(mtcars)", 
 "names(mtcars)[nm==\"hp\"] <- \"horsepower\"", "names(mtcars)[nm==\"wt\"] <- \"weight\"", 
 "mtcars"), chunk_opts = list(label = "exercise10-solution")), 
@@ -787,9 +817,9 @@ learnr:::store_exercise_cache("exercise10", list(setup = NULL, chunks = list(lis
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise10", exercise = TRUE, code = "", out.width.px = 624, 
-        out.height.px = 384, params.src = "exercise10, exercise = TRUE", 
-        fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+        label = "exercise10", exercise = TRUE, code = "mtcars", 
+        out.width.px = 624, out.height.px = 384, params.src = "exercise10, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -800,10 +830,10 @@ output$`tutorial-exercise-exercise11-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise11", list(setup = NULL, chunks = list(list(label = "exercise11", code = "", 
+learnr:::store_exercise_cache("exercise11", list(setup = NULL, chunks = list(list(label = "exercise11", code = "mtcars", 
     opts = list(label = "\"exercise11\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_result(", 
-"  pass_if(~identical(.result, dplyr::relocate(mtcars, mpg, .after = vs)))", 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this(", 
+"  pass_if_equal(dplyr::relocate(mtcars, mpg, .after = vs))", 
 ")"), chunk_opts = list(label = "exercise11-check")), solution = structure(c("nm <- names(mtcars)", 
 "mtcars[, nm[c(2:8, 1, 9:11)]]"), chunk_opts = list(label = "exercise11-solution")), 
     options = list(eval = FALSE, echo = TRUE, results = "markup", 
@@ -825,9 +855,9 @@ learnr:::store_exercise_cache("exercise11", list(setup = NULL, chunks = list(lis
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise11", exercise = TRUE, code = "", out.width.px = 624, 
-        out.height.px = 384, params.src = "exercise11, exercise = TRUE", 
-        fig.num = 0L, exercise.df_print = "paged"), engine = "r"))
+        label = "exercise11", exercise = TRUE, code = "mtcars", 
+        out.width.px = 624, out.height.px = 384, params.src = "exercise11, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">

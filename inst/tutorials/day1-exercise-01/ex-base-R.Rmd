@@ -40,7 +40,8 @@ knitr::opts_chunk$set(error = TRUE)
 
 * This exercise is a revision of your knowledge in Base R. 
 * **You should complete the task _without_ loading any extra packages.**
-* Note that answers can be achieved in multiple ways. 
+* **Note that answers can be achieved in multiple ways.**
+* The solution just shows one way to achieve the answer.
 * You'll working through the `mtcars` dataset.
 * Try pushing the `Run code` button. You should see the data frame output.
 
@@ -59,9 +60,9 @@ mtcars[, "mpg"]
 ```
 
 ```{r exercise0B-check}
-grade_result(
-  pass_if(~identical(.result, mtcars[, "mpg"]))
-)
+grade_this({
+  pass_if_equal(mtcars[, "mpg"])
+})
 ```
 
 * Push `Submit Answer` button above and it will tell you whether you got your answer correct.
@@ -74,13 +75,13 @@ Extract every odd row from `mtcars`.
 </div>
 
 ```{r exercise1, exercise = TRUE}
-
+mtcars[..., ]
 ```
 
 ```{r exercise1-check}
-grade_result(
-  pass_if(~identical(.result, mtcars[c(TRUE, FALSE), ]))
-)
+grade_this({
+  pass_if_equal(mtcars[c(TRUE, FALSE), ])
+})
 ```
 
 ```{r exercise1-solution}
@@ -99,15 +100,16 @@ Delete the `wt` column from `mtcars`. Remember to output the data frame after yo
 </div>
 
 ```{r exercise2, exercise = TRUE}
-
+mtcars$wt <- ...
+mtcars
 ```
 
 ```{r exercise2-check}
-df <- mtcars
-df$wt <- NULL
-grade_result(
-  pass_if(~identical(.result, df))
-)
+grade_this({
+  df <- mtcars
+  df$wt <- NULL
+  pass_if_equal(df)
+})
 ```
 
 ```{r exercise2-solution}
@@ -120,12 +122,12 @@ Delete the first five rows from `mtcars`. Remember to output the data frame afte
 </div>
 
 ```{r exercise3, exercise = TRUE}
-
+mtcars
 ```
 
 ```{r exercise3-check}
-grade_result(
-  pass_if(~identical(.result, mtcars[-c(1:5), ]))
+grade_this(
+  pass_if_equal(mtcars[-c(1:5), ])
 )
 ```
 
@@ -140,12 +142,12 @@ Find the number of rows for `mtcars`.
 </div>
 
 ```{r exercise4, exercise = TRUE}
-
+...(mtcars)
 ```
 
 ```{r exercise4-check}
-grade_result(
-  pass_if(~identical(.result, nrow(mtcars)))
+grade_this(
+  pass_if_equal(nrow(mtcars))
 )
 ```
 
@@ -158,12 +160,12 @@ Find the number of columns for `mtcars`.
 </div>
 
 ```{r exercise5, exercise = TRUE}
-
+...(mtcars)
 ```
 
 ```{r exercise5-check}
-grade_result(
-  pass_if(~identical(.result, ncol(mtcars)))
+grade_this(
+  pass_if_equal(ncol(mtcars))
 )
 ```
 
@@ -178,12 +180,12 @@ Get the row names of the data.
 </div>
 
 ```{r exercise6, exercise = TRUE}
-
+...(mtcars)
 ```
 
 ```{r exercise6-check}
-grade_result(
-  pass_if(~identical(.result, rownames(mtcars)))
+grade_this(
+  pass_if_equal(rownames(mtcars))
 )
 ```
 
@@ -196,14 +198,14 @@ Create a new column called `brand` that contains the row names of `mtcars`. The 
 </div>
 
 ```{r exercise7, exercise = TRUE}
-
+mtcars
 ```
 
 ```{r exercise7-check}
-mtcars$brand <- rownames(mtcars)
-grade_result(
-  pass_if(~identical(.result, mtcars))
-)
+grade_this({
+  mtcars$brand <- rownames(mtcars)
+  pass_if_equal(mtcars)
+})
 ```
 
 ```{r exercise7-solution}
@@ -218,20 +220,27 @@ For every transmission level stored as `am` in `mtcars` (0 = automatic, 1 = manu
 </div>
 
 ```{r exercise8, exercise = TRUE}
-
+min <- ...
+q1 <- ...(..., ..., function(x) quantile(x, 0.25, type = 2))
+med <- ...
+q3 <- ...
+max <- ...
+data.frame(am = names(min),
+           min = min, q1 = q1, med = med, q3 = q3, max = max)
 ```
 
 ```{r exercise8-check}
-min <- tapply(mtcars$hp, mtcars$am, min)
+
+grade_this({  
+  min <- tapply(mtcars$hp, mtcars$am, min)
 q1 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.25, type = 2))
 med <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.5, type = 2))
 q3 <- tapply(mtcars$hp, mtcars$am, function(x) quantile(x, 0.75, type = 2))
 max <- tapply(mtcars$hp, mtcars$am, max)
 df <- data.frame(am = names(min),
                  min = min, q1 = q1, med = med, q3 = q3, max = max)
-grade_result(
-  pass_if(~identical(.result, df))
-)
+  pass_if_equal(df)
+})
 ```
 
 ```{r exercise8-solution}
@@ -251,18 +260,21 @@ data.frame(am = names(min),
 ## (F) Conditional values 
 
 <div class="mytask">
-For every variable in `mtcars` that is less than its average, set it to 0.
+For every cell in `mtcars`, set the value to 0 if its value is less than the average of its column.
 </div>
 
 ```{r exercise9, exercise = TRUE}
-
+for(nm in names(mtcars)) {
+  mtcars[[nm]][... < mean(...)] <- 0
+}
+mtcars
 ```
 
 ```{r exercise9-check}
-for(nm in names(mtcars)) mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0
-grade_result(
-  pass_if(~identical(.result, mtcars))
-)
+grade_this({
+  for(nm in names(mtcars)) mtcars[[nm]][mtcars[[nm]] < mean(mtcars[[nm]])] <- 0
+  pass_if_equal(mtcars)
+})
 ```
 
 ```{r exercise9-solution}
@@ -279,12 +291,12 @@ Rename the column `wt` to `weight` and `hp` to `horsepower` for `mtcars`.
 </div>
 
 ```{r exercise10, exercise = TRUE}
-
+mtcars
 ```
 
 ```{r exercise10-check}
-grade_result(
-  pass_if(~identical(.result, dplyr::rename(mtcars, weight = wt, horsepower = hp)))
+grade_this(
+  pass_if_equal(dplyr::rename(mtcars, weight = wt, horsepower = hp))
 )
 ```
 
@@ -302,12 +314,12 @@ Relocate `mpg` so that it appears after `vs` in `mtcars`.
 </div>
 
 ```{r exercise11, exercise = TRUE}
-
+mtcars
 ```
 
 ```{r exercise11-check}
-grade_result(
-  pass_if(~identical(.result, dplyr::relocate(mtcars, mpg, .after = vs)))
+grade_this(
+  pass_if_equal(dplyr::relocate(mtcars, mpg, .after = vs))
 )
 ```
 
