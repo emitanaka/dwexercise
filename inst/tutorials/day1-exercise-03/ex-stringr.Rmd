@@ -176,14 +176,14 @@ random_sentence <- function() {
   
   verb <- awl %>% 
     filter(pos_tag == "verb") %>% 
-    sample_n(size = 1) %>%  # this also works
+    slice_sample(n = 1) %>%  # this also works
     pull(word)
   
   # you could also make an internal function
   sample_one_word <- function(pos_tag) {
     awl %>% 
       filter(pos_tag == .env$pos_tag) %>% # note here need to be explicit due to data masking
-      sample_n(size = 1) %>%  
+      slice_sample(n = 1) %>%  
       pull(word)
   }
   
@@ -196,7 +196,7 @@ random_sentence <- function() {
 random_sentence()
 ```
 
-* Feel free to post your random sentence in the zoom chat!
+* Feel free to share your random sentence in the zoom chat!
 
 ## (B) Analysing and manipulating texts
 
@@ -234,7 +234,8 @@ Create a new column called `citation` that has a citation format with the last n
 ```{r exercise6, exercise = TRUE}
 tidy_abstracts %>% 
   mutate(...,
-         citation = ...) 
+         citation = ...) %>% 
+  select(-c(last_name, nauthors, etal))
 ```
 
 ```{r exercise6-check}
@@ -282,6 +283,6 @@ tidy_abstracts %>%
     mutate(nword = str_count(abstract, boundary("word"))) 
 ```
 
-<details><summary></summary>
+<details><summary>Hint</summary>
 Check out the `boundary` function.
 </details>

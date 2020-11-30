@@ -315,7 +315,7 @@ frog_signal %>%
 ```
 
 <div class="mytask">
-Select every character variable in `frog_signal` data. You may need to use a selection language that you haven't seen in action yet.
+Select every character variable in `frog_signal` data. 
 </div>
 
 ```{r exercise8, exercise = TRUE}
