@@ -42,7 +42,7 @@ knitr::opts_chunk$set(error = TRUE)
 * **You should complete the task _without_ loading any extra packages.**
 * **Note that answers can be achieved in multiple ways.**
 * The solution just shows one way to achieve the answer.
-* You'll working through the `mtcars` dataset.
+* You'll be working through the `mtcars` dataset.
 * Try pushing the `Run code` button. You should see the data frame output.
 
 ```{r exercise0A, exercise = TRUE}

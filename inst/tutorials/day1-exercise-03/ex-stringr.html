@@ -135,7 +135,7 @@ $(document).ready(function () {
 <ul>
 <li>This exercise will get you to work through the various functions in <code>stringr</code> and also let you practice using regular expressions.</li>
 <li>You will also be using some of the <code>dplyr</code> verbs you’ve just learnt.</li>
-<li>As usual, the dataset and the <code>tidyverse</code> package (containing <code>dplyr</code> and <code>stringr</code>) have been already loaded for you.</li>
+<li>As usual, the datasets and the <code>tidyverse</code> package (containing <code>dplyr</code> and <code>stringr</code>) have been already loaded for you.</li>
 <li>Remember that there are multiple ways to achieve the answer.</li>
 <li>You’ll working will the Academic Word List (AWL).</li>
 <li>The AWL was developed by Averil Coxhead as her MA thesis at the School of Linguistics and Applied Language Studies at Victoria University of Wellington, New Zealand.</li>
@@ -144,29 +144,173 @@ $(document).ready(function () {
 <li>There list contains 10 sublist families ordered by their frequency such that sublist 1 contains the most common words in AWL with sublist 10 with the least common words in AWL.</li>
 <li>You can see the data set below.</li>
 </ul>
-<div class="tutorial-exercise" data-label="exercise0" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<div class="tutorial-exercise" data-label="exercise0A" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>data(awl, package = &quot;dwexercise&quot;)
 awl</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"R code"}</script>
 </div>
+<ul>
+<li>The other data set that you will use in this exercise is the <code>tidy_abstracts</code> that contain a collection of information on articles related to the packages used in this workshop.</li>
+</ul>
+<div class="tutorial-exercise" data-label="exercise0B" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>data(tidy_abstracts, package = &quot;dwexercise&quot;)
+tidy_abstracts</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"R code"}</script>
 </div>
-<div id="section-a-subset-with-logical-vectors" class="section level2">
-<h2>(A) Subset with logical vectors</h2>
+</div>
+<div id="section-a-playing-with-words" class="section level2">
+<h2>(A) Playing with words</h2>
 <div class="mytask">
-<p>How many words are there in AWL that ends with “tion” or “tions”.</p>
+<p>How many words are there for each sublist?</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise1" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>sum(str_...(awl$word, ...))</code></pre>
+<pre class="text"><code>awl %&gt;% 
+  ...(sublist) %&gt;% 
+  tally() # this is from dplyr</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise1-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>awl %&gt;% 
+  group_by(sublist) %&gt;% 
+  tally()</code></pre>
+</div>
+<div class="mytask">
+<p>How many words are there in AWL that ends with “tion” or “tions”.</p>
+</div>
+<div class="tutorial-exercise" data-label="exercise2" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>sum(str_...(awl$word, ...))</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise2-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>sum(str_ends(awl$word, &quot;tions?&quot;))</code></pre>
 </div>
+<div class="mytask">
+<p>What are the shortest and the longest words in AWL that end with “ed”? Have your last output with these words in a vector ordered alphabetically.</p>
+</div>
+<div class="tutorial-exercise" data-label="exercise3" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>awl %&gt;% 
+  ...(...(word, &quot;ed&quot;)) %&gt;% 
+  ...(length = ...(word)) %&gt;% 
+  ...(length %in% c(max(length), min(length))) %&gt;% 
+  arrange(word) %&gt;% 
+  pull(word)</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise3-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>awl %&gt;% 
+  filter(str_ends(word, &quot;ed&quot;)) %&gt;% 
+  mutate(length = str_length(word)) %&gt;% 
+  filter(length %in% c(max(length), min(length))) %&gt;% 
+  arrange(word) %&gt;% 
+  pull(word)</code></pre>
+</div>
+<div class="mytask">
+<p>Make a function that randomly combines words togther from AWL to make a random sentence. An English sentence is ordered usually ordered such that it is subject followed by verb then followed by object. Both subject and object are usually nouns. You may like to include modifiers like adjective and adverb. Remember a sentence begins with a title case and ends with a punctuation.</p>
+</div>
+<ul>
+<li>Note: there is no submit answer for this because the answer will be random!</li>
+</ul>
+<div class="tutorial-exercise" data-label="exercise4" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>random_sentence &lt;- function() {
+  subject &lt;- awl %&gt;% 
+    filter(pos_tag == &quot;noun&quot;) %&gt;% 
+    pull(word) %&gt;% 
+    sample(size = 1)
+  
+  ...
+  
+  ...(&quot;{...(subject)} {verb} {adjective} {object}.&quot;)
+}
+
+random_sentence()</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise4-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>random_sentence &lt;- function() {
+  subject &lt;- awl %&gt;% 
+    filter(pos_tag == &quot;noun&quot;) %&gt;% 
+    pull(word) %&gt;% 
+    sample(size = 1)
+  
+  verb &lt;- awl %&gt;% 
+    filter(pos_tag == &quot;verb&quot;) %&gt;% 
+    sample_n(size = 1) %&gt;%  # this also works
+    pull(word)
+  
+  # you could also make an internal function
+  sample_one_word &lt;- function(pos_tag) {
+    awl %&gt;% 
+      filter(pos_tag == .env$pos_tag) %&gt;% # note here need to be explicit due to data masking
+      sample_n(size = 1) %&gt;%  
+      pull(word)
+  }
+  
+  adjective &lt;- sample_one_word(&quot;adjective&quot;)
+  object &lt;- sample_one_word(&quot;noun&quot;)
+  
+  str_glue(&quot;{str_to_title(subject)} {verb} {adjective} {object}.&quot;)
+}
+
+random_sentence()</code></pre>
+</div>
+<ul>
+<li>Feel free to post your random sentence in the zoom chat!</li>
+</ul>
+</div>
+<div id="section-b-analysing-and-manipulating-texts" class="section level2">
+<h2>(B) Analysing and manipulating texts</h2>
+<div class="mytask">
+<p>Create a new column in <code>tidy_abstracts</code> called <code>num_aw</code> that contains the number of words in the abstract that are in the AWL (ignoring variations of words).</p>
+</div>
+<div class="tutorial-exercise" data-label="exercise5" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>aw_pattern &lt;- ...
+tidy_abstracts %&gt;% 
+  ...(num_aw = ...(abstract, aw_pattern))</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise5-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>aw_pattern &lt;- str_c(&quot;(&quot;, str_c(awl$word, collapse = &quot;|&quot;), &quot;)&quot;)
+tidy_abstracts %&gt;% 
+  mutate(num_aw = str_count(abstract, aw_pattern))</code></pre>
+</div>
+<div class="mytask">
+<p>Create a new column called <code>citation</code> that has a citation format with the last name of the first author and the year of publication in bracket, e.g. “Wickham (2011)”. If there are more than one author add “et al.” before the year, e.g. “Grolemund et al. (2011)”.</p>
+</div>
+<div class="tutorial-exercise" data-label="exercise6" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>tidy_abstracts %&gt;% 
+  mutate(...,
+         citation = ...) </code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise6-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>tidy_abstracts %&gt;% 
+  mutate(last_name = str_match(authors, &quot;^([A-Za-z]+),&quot;)[, 2],
+         nauthors = str_count(authors, &quot; and &quot;)  + 1,
+         etal = if_else(nauthors &gt; 1, &quot;et al. &quot;, &quot;&quot;),
+         citation = str_glue(&quot;{last_name} {etal}({year})&quot;)) %&gt;% 
+  select(-c(last_name, nauthors, etal))</code></pre>
+</div>
+<div class="mytask">
+<p>Typical length of an abstract is about 100 to 500 words. Add a new column to <code>tidy_abstracts</code> called <code>nwords</code> that contain the number of words in the abstract. You may need to use a function you haven’t seen yet for the pattern.</p>
+</div>
+<div class="tutorial-exercise" data-label="exercise7" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>tidy_abstracts %&gt;% 
+  ...(nword = ...(abstract, ...)) </code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="exercise7-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>tidy_abstracts %&gt;% 
+    mutate(nword = str_count(abstract, boundary(&quot;word&quot;))) </code></pre>
+</div>
+<details>
+<summary></summary> Check out the <code>boundary</code> function.
+</details>
 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
 library(tidyverse)
 data(awl, package = "dwexercise")
+data(tidy_abstracts, package = "dwexercise")
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -191,35 +335,38 @@ session$onSessionEnded(function() {
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "data(awl, package = \"dwexercise\")", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"data(tidy_abstracts, package = \"dwexercise\")", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "data(awl, package = \"dwexercise\")", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"data(tidy_abstracts, package = \"dwexercise\")", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "data(awl, package = \"dwexercise\")", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"data(tidy_abstracts, package = \"dwexercise\")", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-`tutorial-exercise-exercise0-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise0-code-editor`)), session)
-output$`tutorial-exercise-exercise0-output` <- renderUI({
-  `tutorial-exercise-exercise0-result`()
+`tutorial-exercise-exercise0A-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise0A-code-editor`)), session)
+output$`tutorial-exercise-exercise0A-output` <- renderUI({
+  `tutorial-exercise-exercise0A-result`()
 })
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise0", list(setup = NULL, chunks = list(list(label = "exercise0", code = "data(awl, package = \"dwexercise\")\nawl", 
-    opts = list(label = "\"exercise0\"", exercise = "TRUE"), 
+learnr:::store_exercise_cache("exercise0A", list(setup = NULL, chunks = list(list(label = "exercise0A", code = "data(awl, package = \"dwexercise\")\nawl", 
+    opts = list(label = "\"exercise0A\"", exercise = "TRUE"), 
     engine = "r")), code_check = NULL, error_check = NULL, check = NULL, 
     solution = NULL, options = list(eval = FALSE, echo = TRUE, 
         results = "markup", tidy = FALSE, tidy.opts = NULL, collapse = FALSE, 
@@ -240,9 +387,45 @@ learnr:::store_exercise_cache("exercise0", list(setup = NULL, chunks = list(list
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise0", exercise = TRUE, code = c("data(awl, package = \"dwexercise\")", 
-        "awl"), out.width.px = 624, out.height.px = 384, params.src = "exercise0, exercise = TRUE", 
+        label = "exercise0A", exercise = TRUE, code = c("data(awl, package = \"dwexercise\")", 
+        "awl"), out.width.px = 624, out.height.px = 384, params.src = "exercise0A, exercise = TRUE", 
         fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise0B-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise0B-code-editor`)), session)
+output$`tutorial-exercise-exercise0B-output` <- renderUI({
+  `tutorial-exercise-exercise0B-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise0B", list(setup = NULL, chunks = list(list(label = "exercise0B", code = "data(tidy_abstracts, package = \"dwexercise\")\ntidy_abstracts", 
+    opts = list(label = "\"exercise0B\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = NULL, 
+    solution = NULL, options = list(eval = FALSE, echo = TRUE, 
+        results = "markup", tidy = FALSE, tidy.opts = NULL, collapse = FALSE, 
+        prompt = FALSE, comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-stringr_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise0B", exercise = TRUE, code = c("data(tidy_abstracts, package = \"dwexercise\")", 
+        "tidy_abstracts"), out.width.px = 624, out.height.px = 384, 
+        params.src = "exercise0B, exercise = TRUE", fig.num = 0, 
+        exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -253,12 +436,52 @@ output$`tutorial-exercise-exercise1-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list(label = "exercise1", code = "sum(str_...(awl$word, ...))", 
+learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list(label = "exercise1", code = "awl %>% \n  ...(sublist) %>% \n  tally() # this is from dplyr", 
     opts = list(label = "\"exercise1\"", exercise = "TRUE"), 
     engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  df <- awl %>% ", "    group_by(sublist) %>% ", "    tally()", 
+"  pass_if_equal(df)", "})"), chunk_opts = list(label = "exercise1-check")), 
+    solution = structure(c("awl %>% ", "  group_by(sublist) %>% ", 
+    "  tally()"), chunk_opts = list(label = "exercise1-solution")), 
+    options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-stringr_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise1", exercise = TRUE, code = c("awl %>% ", 
+        "  ...(sublist) %>% ", "  tally() # this is from dplyr"
+        ), out.width.px = 624, out.height.px = 384, params.src = "exercise1, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise2-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise2-code-editor`)), session)
+output$`tutorial-exercise-exercise2-output` <- renderUI({
+  `tutorial-exercise-exercise2-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise2", list(setup = NULL, chunks = list(list(label = "exercise2", code = "sum(str_...(awl$word, ...))", 
+    opts = list(label = "\"exercise2\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
 "  pass_if_equal(sum(str_ends(awl$word, \"tions?\")))", "})"), chunk_opts = list(
-    label = "exercise1-check")), solution = structure("sum(str_ends(awl$word, \"tions?\"))", chunk_opts = list(
-    label = "exercise1-solution")), options = list(eval = FALSE, 
+    label = "exercise2-check")), solution = structure("sum(str_ends(awl$word, \"tions?\"))", chunk_opts = list(
+    label = "exercise2-solution")), options = list(eval = FALSE, 
     echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
     collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
     strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
@@ -276,13 +499,233 @@ learnr:::store_exercise_cache("exercise1", list(setup = NULL, chunks = list(list
     include = TRUE, purl = TRUE, max.print = 1000, tutorial = TRUE, 
     exercise.timelimit = 60, exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
     exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-    label = "exercise1", exercise = TRUE, code = "sum(str_...(awl$word, ...))", 
-    out.width.px = 624, out.height.px = 384, params.src = "exercise1, exercise = TRUE", 
+    label = "exercise2", exercise = TRUE, code = "sum(str_...(awl$word, ...))", 
+    out.width.px = 624, out.height.px = 384, params.src = "exercise2, exercise = TRUE", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise3-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise3-code-editor`)), session)
+output$`tutorial-exercise-exercise3-output` <- renderUI({
+  `tutorial-exercise-exercise3-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise3", list(setup = NULL, chunks = list(list(label = "exercise3", code = "awl %>% \n  ...(...(word, \"ed\")) %>% \n  ...(length = ...(word)) %>% \n  ...(length %in% c(max(length), min(length))) %>% \n  arrange(word) %>% \n  pull(word)", 
+    opts = list(label = "\"exercise3\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  out <- awl %>% ", "    filter(str_ends(word, \"ed\")) %>% ", 
+"    mutate(length = str_length(word)) %>% ", "    filter(length %in% c(max(length), min(length))) %>% ", 
+"    arrange(word) %>% ", "    pull(word)", "  ", "  pass_if_equal(out)", 
+"})"), chunk_opts = list(label = "exercise3-check")), solution = structure(c("awl %>% ", 
+"  filter(str_ends(word, \"ed\")) %>% ", "  mutate(length = str_length(word)) %>% ", 
+"  filter(length %in% c(max(length), min(length))) %>% ", "  arrange(word) %>% ", 
+"  pull(word)"), chunk_opts = list(label = "exercise3-solution")), 
+    options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-stringr_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise3", exercise = TRUE, code = c("awl %>% ", 
+        "  ...(...(word, \"ed\")) %>% ", "  ...(length = ...(word)) %>% ", 
+        "  ...(length %in% c(max(length), min(length))) %>% ", 
+        "  arrange(word) %>% ", "  pull(word)"), out.width.px = 624, 
+        out.height.px = 384, params.src = "exercise3, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise4-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise4-code-editor`)), session)
+output$`tutorial-exercise-exercise4-output` <- renderUI({
+  `tutorial-exercise-exercise4-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list(label = "exercise4", code = "random_sentence <- function() {\n  subject <- awl %>% \n    filter(pos_tag == \"noun\") %>% \n    pull(word) %>% \n    sample(size = 1)\n  \n  ...\n  \n  ...(\"{...(subject)} {verb} {adjective} {object}.\")\n}\n\nrandom_sentence()", 
+    opts = list(label = "\"exercise4\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = NULL, 
+    solution = structure(c("random_sentence <- function() {", 
+    "  subject <- awl %>% ", "    filter(pos_tag == \"noun\") %>% ", 
+    "    pull(word) %>% ", "    sample(size = 1)", "  ", "  verb <- awl %>% ", 
+    "    filter(pos_tag == \"verb\") %>% ", "    sample_n(size = 1) %>%  # this also works", 
+    "    pull(word)", "  ", "  # you could also make an internal function", 
+    "  sample_one_word <- function(pos_tag) {", "    awl %>% ", 
+    "      filter(pos_tag == .env$pos_tag) %>% # note here need to be explicit due to data masking", 
+    "      sample_n(size = 1) %>%  ", "      pull(word)", "  }", 
+    "  ", "  adjective <- sample_one_word(\"adjective\")", "  object <- sample_one_word(\"noun\")", 
+    "  ", "  str_glue(\"{str_to_title(subject)} {verb} {adjective} {object}.\")", 
+    "}", "", "random_sentence()"), chunk_opts = list(label = "exercise4-solution")), 
+    options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, strip.white = TRUE, 
+        size = "normalsize", background = "#F7F7F7", cache = 0, 
+        cache.path = "ex-stringr_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise4", exercise = TRUE, code = c("random_sentence <- function() {", 
+        "  subject <- awl %>% ", "    filter(pos_tag == \"noun\") %>% ", 
+        "    pull(word) %>% ", "    sample(size = 1)", "  ", 
+        "  ...", "  ", "  ...(\"{...(subject)} {verb} {adjective} {object}.\")", 
+        "}", "", "random_sentence()"), out.width.px = 624, out.height.px = 384, 
+        params.src = "exercise4, exercise = TRUE", fig.num = 0, 
+        exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise5-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise5-code-editor`)), session)
+output$`tutorial-exercise-exercise5-output` <- renderUI({
+  `tutorial-exercise-exercise5-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise5", list(setup = NULL, chunks = list(list(label = "exercise5", code = "aw_pattern <- ...\ntidy_abstracts %>% \n  ...(num_aw = ...(abstract, aw_pattern))", 
+    opts = list(label = "\"exercise5\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  aw_pattern <- str_c(\"(\", str_c(awl$word, collapse = \"|\"), \")\")", 
+"  out <- tidy_abstracts %>% ", "    mutate(num_aw = str_count(abstract, aw_pattern))", 
+"  ", "  pass_if_equal(out)", "})"), chunk_opts = list(label = "exercise5-check")), 
+    solution = structure(c("aw_pattern <- str_c(\"(\", str_c(awl$word, collapse = \"|\"), \")\")", 
+    "tidy_abstracts %>% ", "  mutate(num_aw = str_count(abstract, aw_pattern))"
+    ), chunk_opts = list(label = "exercise5-solution")), options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, strip.white = TRUE, size = "normalsize", 
+        background = "#F7F7F7", cache = 0, cache.path = "ex-stringr_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = TRUE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
+        exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+        exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+        label = "exercise5", exercise = TRUE, code = c("aw_pattern <- ...", 
+        "tidy_abstracts %>% ", "  ...(num_aw = ...(abstract, aw_pattern))"
+        ), out.width.px = 624, out.height.px = 384, params.src = "exercise5, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise6-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise6-code-editor`)), session)
+output$`tutorial-exercise-exercise6-output` <- renderUI({
+  `tutorial-exercise-exercise6-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise6", list(setup = NULL, chunks = list(list(label = "exercise6", code = "tidy_abstracts %>% \n  mutate(...,\n         citation = ...) ", 
+    opts = list(label = "\"exercise6\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  out <- tidy_abstracts %>% ", "    mutate(last_name = str_match(authors, \"^([A-Za-z]+),\")[, 2],", 
+"           nauthors = str_count(authors, \" and \")  + 1,", 
+"           etal = if_else(nauthors > 1, \"et al. \", \"\"),", 
+"           citation = str_glue(\"{last_name} {etal}({year})\")) %>% ", 
+"    select(-c(last_name, nauthors, etal))", "  ", "  pass_if_equal(out$citation, x = .result$citation)", 
+"})"), chunk_opts = list(label = "exercise6-check")), solution = structure(c("tidy_abstracts %>% ", 
+"  mutate(last_name = str_match(authors, \"^([A-Za-z]+),\")[, 2],", 
+"         nauthors = str_count(authors, \" and \")  + 1,", "         etal = if_else(nauthors > 1, \"et al. \", \"\"),", 
+"         citation = str_glue(\"{last_name} {etal}({year})\")) %>% ", 
+"  select(-c(last_name, nauthors, etal))"), chunk_opts = list(
+    label = "exercise6-solution")), options = list(eval = FALSE, 
+    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
+    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
+    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
+    cache = 0, cache.path = "ex-stringr_cache/html/", cache.vars = NULL, 
+    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
+    fig.keep = "high", fig.show = "asis", fig.align = "default", 
+    fig.path = "ex-stringr_files/figure-html/", dev = "png", 
+    dev.args = NULL, dpi = 192, fig.ext = "png", fig.width = 6.5, 
+    fig.height = 4, fig.env = "figure", fig.cap = NULL, fig.scap = NULL, 
+    fig.lp = "fig:", fig.subcap = NULL, fig.pos = "", out.width = 624, 
+    out.height = NULL, out.extra = NULL, fig.retina = 2, external = TRUE, 
+    sanitize = FALSE, interval = 1, aniopts = "controls,loop", 
+    warning = TRUE, error = TRUE, message = TRUE, render = NULL, 
+    ref.label = NULL, child = NULL, engine = "r", split = FALSE, 
+    include = TRUE, purl = TRUE, max.print = 1000, tutorial = TRUE, 
+    exercise.timelimit = 60, exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+    exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+    label = "exercise6", exercise = TRUE, code = c("tidy_abstracts %>% ", 
+    "  mutate(...,", "         citation = ...) "), out.width.px = 624, 
+    out.height.px = 384, params.src = "exercise6, exercise = TRUE", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-exercise7-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-exercise7-code-editor`)), session)
+output$`tutorial-exercise-exercise7-output` <- renderUI({
+  `tutorial-exercise-exercise7-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("exercise7", list(setup = NULL, chunks = list(list(label = "exercise7", code = "tidy_abstracts %>% \n  ...(nword = ...(abstract, ...)) ", 
+    opts = list(label = "\"exercise7\"", exercise = "TRUE"), 
+    engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
+"  out <- tidy_abstracts %>% ", "    mutate(nword = str_count(abstract, boundary(\"word\"))) ", 
+"  ", "  pass_if_equal(out$nword, x = .result$nword)", "})"), chunk_opts = list(
+    label = "exercise7-check")), solution = structure(c("tidy_abstracts %>% ", 
+"    mutate(nword = str_count(abstract, boundary(\"word\"))) "
+), chunk_opts = list(label = "exercise7-solution")), options = list(
+    eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+    tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+    highlight = FALSE, strip.white = TRUE, size = "normalsize", 
+    background = "#F7F7F7", cache = 0, cache.path = "ex-stringr_cache/html/", 
+    cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+    cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+    fig.align = "default", fig.path = "ex-stringr_files/figure-html/", 
+    dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+    fig.width = 6.5, fig.height = 4, fig.env = "figure", fig.cap = NULL, 
+    fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, fig.pos = "", 
+    out.width = 624, out.height = NULL, out.extra = NULL, fig.retina = 2, 
+    external = TRUE, sanitize = FALSE, interval = 1, aniopts = "controls,loop", 
+    warning = TRUE, error = TRUE, message = TRUE, render = NULL, 
+    ref.label = NULL, child = NULL, engine = "r", split = FALSE, 
+    include = TRUE, purl = TRUE, max.print = 1000, tutorial = TRUE, 
+    exercise.timelimit = 60, exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
+    exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
+    label = "exercise7", exercise = TRUE, code = c("tidy_abstracts %>% ", 
+    "  ...(nword = ...(abstract, ...)) "), out.width.px = 624, 
+    out.height.px = 384, params.src = "exercise7, exercise = TRUE", 
     fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">
-{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["header-attrs"]},{"type":"character","attributes":{},"value":["2.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pandoc"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["header-attrs.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["default.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["anchor-sections"]},{"type":"character","attributes":{},"value":["1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/anchor-sections"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["anchor-sections.js"]},{"type":"character","attributes":{},"value":["anchor-sections.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.css","css/v4-shims.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["idb-keyvalue"]},{"type":"character","attributes":{},"value":["3.2.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/idb-keyval"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["idb-keyval-iife-compat.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]}]}
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["header-attrs"]},{"type":"character","attributes":{},"value":["2.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pandoc"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["header-attrs.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["default.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["anchor-sections"]},{"type":"character","attributes":{},"value":["1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/anchor-sections"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["anchor-sections.js"]},{"type":"character","attributes":{},"value":["anchor-sections.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["1.11.3"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/jquery"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["5.1.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.css","css/v4-shims.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["4.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["idb-keyvalue"]},{"type":"character","attributes":{},"value":["3.2.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/idb-keyval"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["idb-keyval-iife-compat.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-autocompletion"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-autocompletion.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-diagnostics"]},{"type":"character","attributes":{},"value":["0.10.1.9006"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-diagnostics.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.2.6"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["1.5.15"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.10.1.9006"]}]}]}
 </script>
 <!--/html_preserve-->
 <!--html_preserve-->

@@ -1,6 +1,7 @@
 ## code to prepare `academic-word-list` dataset goes here
 # https://www.wgtn.ac.nz/lals/resources/academicwordlist/most-frequent
 library(tidyverse)
+library(googlenlp)
 awl1 <- data.frame(word = c("analysis",
                             "approach",
                             "area",
@@ -586,5 +587,40 @@ awl10 <- data.frame(word = c("adjacent",
 
 
 awl <- map_dfr(1:10, ~get(paste0("awl", .x)))
+
+#text <- paste(awl$word, collapse = ", ")
+#analyzed <- annotate_text(text_body = text)
+
+tictoc::tic()
+awl <- awl %>%
+  mutate(pos_tag = map_chr(word, ~{
+        analyzed <- annotate_text(text_body = .x)
+        analyzed$tokens$tag[1]
+      }))
+tictoc::toc()
+# 288.137 sec elapsed
+POStags <- tribble(~tag, ~label,
+                   "ADJ", "adjective",
+                   "ADP", "adposition",
+                   "ADV", "adverb",
+                   "AUX", "auxiliary",
+                   "CCONJ", "coordinating conjunction",
+                   "DET", "determiner",
+                   "INTJ", "interjection",
+                   "NOUN", "noun",
+                   "NUM", "numeral",
+                   "PART", "particle",
+                   "PRON", "pronoun",
+                   "PROPN", "proper noun",
+                   "PUNCT", "punctuation",
+                   "SCONJ", "subordinating conjunction",
+                   "SYM", "symbol",
+                   "VERB", "verb",
+                   "X", "other")
+
+awl <- awl %>%
+  left_join(POStags, by = c("pos_tag" = "tag")) %>%
+  select(-pos_tag) %>%
+  rename(pos_tag = label)
 
 usethis::use_data(awl, overwrite = TRUE)

@@ -1,0 +1,321 @@
+---
+title: "Day 2 Exercise 2"
+subtitle: "Formatting factors with `forcats`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Formatting factors with forcats
+---
+
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
+```{r setup, include=FALSE, error = TRUE}
+library(learnr)
+library(tidyverse)
+library(janitor)
+library(dwexercise)
+library(agridat)
+if("gradethis" %in% installed.packages()) {
+  gradethis::gradethis_setup()
+} 
+tutorial_options(exercise.timelimit = 60,
+                 exercise.eval = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Welcome
+
+* You will be working with factors and how to manipulate them in this exercise.
+* Note that answers can be achieved in multiple ways. 
+* The `tidyverse` package (which includes `forcats`) and the `janitor` package as well as  the datasets have been loaded for all exercises.
+
+* The `oz_climate` data that a survey about attitude towards climate change in Australia
+* The `oz_climate_qbook` data contains the translation of the column label in `oz_climate` to the actual question asked
+
+```{r exercise0A, exercise = TRUE}
+data(oz_climate, package = "dwexercise")
+oz_climate
+```
+
+```{r exercise0B, exercise = TRUE}
+data(oz_climate_qbook, package = "dwexercise")
+oz_climate_qbook
+```
+
+* The `airline` data contains results from the survey of UC Davis employees on airline travel preferences 
+
+```{r exercise0C, exercise = TRUE}
+data(airline, package = "dwexercise")
+airline
+```
+
+## (A) Frequency of factor levels
+
+<div class="mytask">
+The column `flight_arrangment` contains information on how users prefer to arrange their flights. Get the counts for the user preferred way to arrange their flights ordered in descending order of frequency. Note that the data set contains duplicate entries of `flight_arrangment` per user (due to each row containing observations for each question).
+</div>
+
+```{r exercise1, exercise = TRUE}
+airline %>% 
+  ... %>% 
+  ...(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment) %>% 
+  ...(sort = TRUE)
+```
+
+
+```{r exercise1-check}
+grade_this({
+  df <- airline %>% 
+    group_by(user_id) %>% 
+    summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+    pull(flight_arrangment) %>% 
+    fct_count(sort = TRUE)
+  pass_if_equal(df)
+})
+```
+
+```{r exercise1-solution}
+airline %>% 
+  group_by(user_id) %>% 
+  summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment) %>% 
+  fct_count(sort = TRUE)
+```
+
+* Your output should look like below
+
+```{r exercise1-print, echo = FALSE}
+airline %>% 
+  group_by(user_id) %>% 
+  summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment) %>% 
+  fct_count(sort = TRUE)
+```
+
+## (B) Group and count factor levels
+
+<div class="mytask">
+You may have notice that `flight_arrangment` had a level with "Other (please specify):". The user entered information for this is contained in `flight_arrangment_other`. Replace the value in `flight_arrangment` with `flight_arrangment_other` when this was selected. Notice that some user entered information should be the same, e.g `orbitz` and `Orbitz`. Collapse the factor levels that belong together. 
+</div>
+
+```{r exercise2, exercise = TRUE, exercise.lines = 20}
+airline %>% 
+  # replace other with user input
+  mutate(flight_arrangment = ...) %>% 
+  # get unique entry for flight_arrangment per user
+  group_by(user_id) %>% 
+  summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment)  %>% 
+  # collapse factors
+  ...(Skyscanner = str_subset(., regex("(skyscan|sky scan)", ignore_case = TRUE)),
+      `Airline website` = str_subset(., regex("(site|direct|united|southwest|airline)", ignore_case = TRUE)),
+      Orbitz = str_subset(., regex("orbitz", ignore_case = TRUE)),
+      Travelocity = str_subset(., regex("travelocity", ignore_case = TRUE))) %>% 
+  # order them by frequency so the count is in a better orer
+  ...() %>% 
+  # lump those with low frequency together
+  ...(10) %>% 
+  # get the counts for each level
+  ...() 
+```
+
+
+
+```{r exercise2-check}
+grade_this({
+  df <- airline %>% 
+    # replace other with user input
+    mutate(flight_arrangment = case_when(
+      flight_arrangment=="Other (please specify):" ~ flight_arrangment_other,
+      TRUE ~ flight_arrangment
+    )) %>% 
+    # get unique entry for flight_arrangment per user
+    group_by(user_id) %>% 
+    summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+    pull(flight_arrangment)  %>% 
+    # collpase factors
+    fct_collapse(Skyscanner = str_subset(., regex("(skyscan|sky scan)", ignore_case = TRUE)),
+                 `Airline website` = str_subset(., regex("(site|direct|united|southwest|airline)", ignore_case = TRUE)),
+                 Orbitz = str_subset(., regex("orbitz", ignore_case = TRUE)),
+                 Travelocity = str_subset(., regex("travelocity", ignore_case = TRUE))) %>% 
+    # order them by frequency so the count is in a better orer
+    fct_infreq() %>% 
+    # lump those with low frequency together
+    fct_lump_n(10) %>% 
+    # get the counts for each level
+    fct_count() 
+  pass_if_equal(df)
+})
+```
+
+```{r exercise2-solution}
+airline %>% 
+  # replace other with user input
+  mutate(flight_arrangment = case_when(
+    flight_arrangment=="Other (please specify):" ~ flight_arrangment_other,
+    TRUE ~ flight_arrangment
+  )) %>% 
+  # get unique entry for flight_arrangment per user
+  group_by(user_id) %>% 
+  summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment)  %>% 
+  # collpase factors
+  fct_collapse(Skyscanner = str_subset(., regex("(skyscan|sky scan)", ignore_case = TRUE)),
+               `Airline website` = str_subset(., regex("(site|direct|united|southwest|airline)", ignore_case = TRUE)),
+               Orbitz = str_subset(., regex("orbitz", ignore_case = TRUE)),
+               Travelocity = str_subset(., regex("travelocity", ignore_case = TRUE))) %>% 
+  # order them by frequency so the count is in a better orer
+  fct_infreq() %>% 
+  # lump those with low frequency together
+  fct_lump_n(10) %>% 
+  # get the counts for each level
+  fct_count() 
+```
+
+* Your output should look like below
+
+```{r exercise2-print, echo = FALSE}
+airline %>% 
+  # replace other with user input
+  mutate(flight_arrangment = case_when(
+    flight_arrangment=="Other (please specify):" ~ flight_arrangment_other,
+    TRUE ~ flight_arrangment
+  )) %>% 
+  # get unique entry for flight_arrangment per user
+  group_by(user_id) %>% 
+  summarise(flight_arrangment = unique(flight_arrangment)) %>% 
+  pull(flight_arrangment)  %>% 
+  # collpase factors
+  fct_collapse(Skyscanner = str_subset(., regex("(skyscan|sky scan)", ignore_case = TRUE)),
+               `Airline website` = str_subset(., regex("(site|direct|united|southwest|airline)", ignore_case = TRUE)),
+               Orbitz = str_subset(., regex("orbitz", ignore_case = TRUE)),
+               Travelocity = str_subset(., regex("travelocity", ignore_case = TRUE))) %>% 
+  # order them by frequency so the count is in a better orer
+  fct_infreq() %>% 
+  # lump those with low frequency together
+  fct_lump_n(10) %>% 
+  # get the counts for each level
+  fct_count() 
+```
+
+## (C) Reorder factor levels
+
+* Run the code below and look at the order of the factor level in the print out. Why is it in this order?
+
+```{r exercise3-show, exercise = TRUE}
+oz_climate$q1_1 %>% 
+  fct_count()
+```
+
+<div class="mytask">
+Sub-questions of question 1-3, (i.e. `q1_1`, `q1_2`, ..., `q3_7`), in `oz_climate` data are all _ordinal categorical variables_. Notice in the above print out that the order of the levels are alphabetical. Reorder the levels so that the order is "Strongly disagree", "Mildly disagree", "Unsure", "Mildly agree", "Strongly agree" for questions 1-3. Note that some answers have a typo for "Mildly agree" as "Mildy agree" so you will need to correct this first. Then transform this data so it is like the table shown below.
+</div>
+
+```{r exercise3, exercise = TRUE}
+lvls <- c("Strongly disagree", "Mildly disagree", "Unsure", "Mildly agree", "Strongly agree")
+oz_climate %>% 
+  select(q1_1:q3_7) %>% 
+  mutate(across(everything(), function(x) ifelse(x=="Mildy agree", "Mildly agree", x)),
+         # re-level the factors
+         across(everything(), function(x) ...)) %>% 
+  pivot_longer(everything(),
+               names_to = "question",
+               values_to = "answer") %>% 
+  group_by(question, answer) %>% 
+  tally() %>% 
+  ... %>% 
+  # use janitor to make a nice table
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(digits = 1) %>% 
+  adorn_ns("front") %>% 
+  # need to join the questions from the question book
+  ...(oz_climate_qbook, by = ...) %>% 
+  ...
+```
+
+
+
+```{r exercise3-check}
+grade_this({
+  lvls <- c("Strongly disagree", "Mildly disagree", "Unsure", "Mildly agree", "Strongly agree")
+  df <- oz_climate %>% 
+    select(q1_1:q3_7) %>% 
+    mutate(across(everything(), function(x) ifelse(x=="Mildy agree", "Mildly agree", x)),
+           across(everything(), function(x) fct_relevel(x, lvls))) %>% 
+    pivot_longer(everything(),
+                 names_to = "question",
+                 values_to = "answer") %>% 
+    group_by(question, answer) %>% 
+    tally() %>% # OR summarise(n = n()) %>% 
+    pivot_wider(question, names_from = answer, values_from = n) %>% 
+    # use janitor to make a nice table
+    adorn_percentages("row") %>% 
+    adorn_pct_formatting(digits = 1) %>% 
+    adorn_ns("front") %>% 
+    # need to join the questions from the question book
+    left_join(oz_climate_qbook, by = c("question"="code")) %>% 
+    relocate(desc, .after = question)
+  pass_if_equal(df)
+})
+```
+
+```{r exercise3-solution}
+lvls <- c("Strongly disagree", "Mildly disagree", "Unsure", "Mildly agree", "Strongly agree")
+oz_climate %>% 
+  select(q1_1:q3_7) %>% 
+  mutate(across(everything(), function(x) ifelse(x=="Mildy agree", "Mildly agree", x)),
+         across(everything(), function(x) fct_relevel(x, lvls))) %>% 
+  pivot_longer(everything(),
+               names_to = "question",
+               values_to = "answer") %>% 
+  group_by(question, answer) %>% 
+  tally() %>% # OR summarise(n = n()) %>% 
+  pivot_wider(question, names_from = answer, values_from = n) %>% 
+  # use janitor to make a nice table
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(digits = 1) %>% 
+  adorn_ns("front") %>% 
+  # need to join the questions from the question book
+  left_join(oz_climate_qbook, by = c("question"="code")) %>% 
+  relocate(desc, .after = question)
+```
+
+* Your output should look like below
+
+```{r exercise3-print, echo = FALSE, message = FALSE, warning=FALSE}
+lvls <- c("Strongly disagree", "Mildly disagree", "Unsure", "Mildly agree", "Strongly agree")
+oz_climate %>% 
+  select(q1_1:q3_7) %>% 
+  mutate(across(everything(), function(x) ifelse(x=="Mildy agree", "Mildly agree", x)),
+         across(everything(), function(x) fct_relevel(x, lvls))) %>% 
+  pivot_longer(everything(),
+               names_to = "question",
+               values_to = "answer") %>% 
+  group_by(question, answer) %>% 
+  tally() %>% # OR summarise(n = n()) %>% 
+  pivot_wider(question, names_from = answer, values_from = n) %>% 
+  # use janitor to make a nice table
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(digits = 1) %>% 
+  adorn_ns("front") %>% 
+  # need to join the questions from the question book
+  left_join(oz_climate_qbook, by = c("question"="code")) %>% 
+  relocate(desc, .after = question)
+```

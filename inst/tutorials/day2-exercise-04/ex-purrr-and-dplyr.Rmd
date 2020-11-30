@@ -1,6 +1,6 @@
 ---
 title: "Day 2 Exercise 4"
-subtitle: "Advanced data wrangling  starring `purrr`"
+subtitle: "Advanced data wrangling starring `purrr`"
 output: 
   learnr::tutorial:
     progressive: true
@@ -10,8 +10,25 @@ description: >
   Learning purrr and dplyr
 ---
 
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
 ```{r setup, include=FALSE, error = TRUE}
 library(learnr)
+library(tidyverse)
+library(dwexercise)
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -22,16 +39,141 @@ knitr::opts_chunk$set(error = TRUE)
 
 ## Welcome
 
-* This exercise is a revision of your knowledge in Base R. 
-* You should try achieve the aim _without_ loading any extra packages.
-* Note that answers can be achieved in multiple ways. 
-* You'll working through the `mtcars` dataset.
+* In this exercise you will practice using `purrr` as well as other data wrangling techniques you have learnt in the course.
+* There are multiple ways to achieve the answers.
+* Note that you don't necessary have to `purrr` for each question!
+* The `tidyverse` and `agridat` packages and the datasets have been loaded for all exercises.
 
+```{r exercise0A, exercise = TRUE}
+frog_signal
+```
 
+```{r exercise0B, exercise = TRUE}
+oz_climate
+```
 
-## (A) Subset with logical vectors
+## (A) Data set characteristics 
 
 <div class="mytask">
-Normalise every numerical variable in `frogsignal` data such that its sample mean is 0 and sample standard deviation is 1. 
+What are class type for each column in `frog_signal` data? 
 </div>
 
+
+```{r exercise1, exercise = TRUE}
+
+```
+
+```{r exercise1-check}
+grade_this({
+  pass_if_equal(map_chr(frog_signal, class))
+})
+```
+
+```{r exercise1-solution}
+frog_signal %>% 
+  map_chr(class)
+```
+
+
+<div class="mytask">
+What are the number of distinct values in each column in `oz_climate`? (Return number as integer)
+</div>
+
+
+```{r exercise2, exercise = TRUE}
+
+```
+
+```{r exercise2-check}
+grade_this({
+  pass_if_equal(map_int(oz_climate, n_distinct))
+})
+```
+
+```{r exercise2-solution}
+map_int(oz_climate, n_distinct)
+```
+
+
+
+## (B) Principle Component Analysis
+
+<div class="mytask">
+Subset to only numerical variables in `frog_signal`. Remove any rows with missing values. And then normalise every numerical variable such that its sample mean is 0 and sample standard deviation is 1. And then run a principle component analysis.
+</div>
+
+
+```{r exercise3, exercise = TRUE}
+frog_signal %>% 
+  ... %>% 
+  drop_na() %>% 
+  scale() %>% 
+  prcomp()
+```
+
+```{r exercise3-check}
+grade_this({
+  df <- frog_signal %>% 
+    select(where(is.numeric)) %>% 
+    drop_na() %>% 
+    scale() %>% 
+    prcomp()
+  pass_if_equal(df)
+})
+```
+
+```{r exercise3-solution}
+frog_signal %>% 
+  select(where(is.numeric)) %>% 
+  drop_na() %>% 
+  scale() %>% 
+  prcomp()
+```
+
+## (C) Simulation study: misspecified model
+
+<div class="mytask">
+Let's simulate a data with 200 observations from a simple linear model with intercept is 1 and slope is 2 and where the error distribution is from a $t_3$ distribution.  
+</div>
+
+
+```{r exercise4, exercise = TRUE}
+set.seed(1)
+sim <- tibble(1:200) %>% 
+  mutate(x = runif(n(), 0, 1), # some independent covariates
+         y = 1 + 2 * x + rt(n(), 3)) # intercept = 1, slope = 2
+
+ests <- coef(lm(y ~ x, data = sim))
+tibble(intercept = ests[1], slope = ests[2]) # how close are these to the true values?
+```
+
+```{r exercise4-check}
+grade_this({
+  df <- frog_signal %>% 
+    select(where(is.numeric)) %>% 
+    drop_na() %>% 
+    scale() %>% 
+    prcomp()
+  pass_if_equal(df)
+})
+```
+
+```{r exercise4-solution}
+set.seed(1)
+df <- map_dfr(1:100, ~{
+  sim <- tibble(1:200) %>% 
+    mutate(x = runif(n(), 0, 1), # some independent covariates
+           y = 1 + 2 * x + rt(n(), 3)) 
+  ests <- coef(lm(y ~ x, data = sim))
+  tibble(intercept = ests[1], slope = ests[2], sim =.x)
+})
+
+df %>% 
+  mutate(intercept = abs(intercept - 1),
+         slope = abs(slope - 2)) %>% 
+  select(-sim) %>% 
+  summarise(across(intercept:slope, 
+                   list(mean = mean,
+                        sd = sd),
+                   .names = "{.col}_{.fn}")) 
+```

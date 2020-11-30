@@ -1,0 +1,385 @@
+---
+title: "Day 2 Exercise 1"
+subtitle: "Relational data wrangling starring `janitor` and `broom`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Relational data wrangling starring janitor and broom
+---
+
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
+```{r setup, include=FALSE, error = TRUE}
+library(learnr)
+library(tidyverse)
+library(janitor)
+library(broom)
+library(dwexercise)
+library(agridat)
+if("gradethis" %in% installed.packages()) {
+  gradethis::gradethis_setup()
+} 
+tutorial_options(exercise.timelimit = 60,
+                 exercise.eval = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Welcome
+
+* These exercises have get you to work with combining datasets and appending of other information (e.g. totals, percentages, or model output) using `janitor` and `broom`.
+* Note that answers can be achieved in multiple ways. 
+* The `tidyverse`, `janitor`, and `broom` packages and the datasets have been loaded for all exercises.
+
+* The data `census_2016_G04` contains the number of people for each age and sex combination by Australian states and territories from the 2016 census.
+
+```{r exercise0A, exercise = TRUE}
+data(census_2016_G04, package = "dwexercise")
+census_2016_G04
+```
+
+* The data `census_2016_STE` contains the dictionary for STE code to the names of the corresponding states and territories. 
+
+```{r exercise0B, exercise = TRUE}
+data(census_2016_STE, package = "dwexercise")
+census_2016_STE
+```
+
+* The data `nass.wheat` and `nass.soybean` contains the annual wheat and soybean yield (in bushels/acre) for each state.
+
+```{r exercise0C, exercise = TRUE}
+data(nass.wheat, package = "agridat")
+nass.wheat
+```
+
+
+```{r exercise0D, exercise = TRUE}
+data(nass.soybean, package = "agridat")
+nass.soybean
+```
+
+
+## (A) Pivot data once again
+
+<div class="mytask">
+Transform the data `census_2016_G04` such that it is in a long format as shown below. Note that the transformed data ignores the aggregated versions of other columns and people who are 80 or over 80. Save this output as `dfA`. If you have a hard time figuring out the string pattern, see the hint.
+</div>
+
+```{r exercise1, exercise = TRUE}
+dfA <- census_2016_G04 %>% 
+  ...(STE_CODE_2016 | matches(...)) %>% 
+  ...(...,
+      ... = c("age", "sex"),
+      ... = ...,
+      names_transform = list(age = as.integer),
+      ... = "count")
+```
+
+```{r exercise1-check}
+grade_this({
+  df <- census_2016_G04 %>% 
+    select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+    pivot_longer(-STE_CODE_2016,
+                 names_to = c("age", "sex"),
+                 names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+                 names_transform = list(age = as.integer),
+                 values_to = "count")
+  pass_if_equal(df)
+})
+```
+
+```{r exercise1-solution}
+dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+```
+
+* Your output data should be like below
+
+```{r exercise1-print, echo = FALSE}
+census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+```
+
+<details><summary>Hint</summary>
+The `names_pattern` regular expression should be `"^Age_yr_([0-9]{1,2})_([MF])"`.
+</details>
+
+## (B) Replace with dictionary values
+
+```{r exercise2-setup, echo = FALSE}
+dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+```
+
+<div class="mytask">
+Given the transformed data from (A), now match up with the data dictionary `census_2016_STE` to get the actual names of the states and territories; and then transform the data to a wide format as shown below. 
+</div>
+
+```{r exercise2, exercise = TRUE}
+dfA %>% 
+  ...(census_2016_STE, by = ...) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  ...
+```
+
+```{r exercise2-check}
+grade_this({
+  dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+
+  df <- dfA %>% 
+    left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+    select(-STE_CODE_2016, -name) %>% 
+    pivot_wider(names_from = abbrv,
+                values_from = count)
+  pass_if_equal(df)
+})
+```
+
+```{r exercise2-solution}
+dfA %>% 
+  left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  pivot_wider(names_from = abbrv,
+              values_from = count)
+```
+
+* Your output data should be like below
+
+```{r exercise2-print, echo = FALSE}
+dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+
+dfA %>% 
+  left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  pivot_wider(names_from = abbrv,
+              values_from = count)
+
+```
+
+## (C) Adorn with totals
+
+```{r exercise3-setup, echo = FALSE}
+dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+
+dfB <- dfA %>% 
+  left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  pivot_wider(names_from = abbrv,
+              values_from = count)
+```
+
+<div class="mytask">
+Given the transformed data from (B), add a column and row that show the total population by row (sex and age) and column (state). For each cell that has the count, append a percentage by each sex and age group as shown below.
+</div>
+
+```{r exercise3, exercise = TRUE}
+dfB %>% 
+  adorn...(c("row", "col")) %>% 
+  ...("row") %>% 
+  ...(digits = 2) %>%
+  ...(position = "front")
+```
+
+```{r exercise3-check}
+grade_this({
+  dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+
+dfB <- dfA %>% 
+  left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  pivot_wider(names_from = abbrv,
+              values_from = count)
+
+  df <- dfB %>% 
+    adorn_totals(c("row", "col")) %>% 
+    adorn_percentages("row") %>% 
+    adorn_pct_formatting(digits = 2) %>%
+    adorn_ns(position = "front")
+  pass_if_equal(df)
+})
+```
+
+```{r exercise3-solution}
+dfB %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns(position = "front")
+```
+
+* Your output data should be like below
+
+```{r exercise3-print, echo = FALSE}
+dfA <- census_2016_G04 %>% 
+  select(STE_CODE_2016 | matches("^Age_yr_[0-9]{1,2}_[MF]$")) %>% 
+  pivot_longer(-STE_CODE_2016,
+               names_to = c("age", "sex"),
+               names_pattern = "^Age_yr_([0-9]{1,2})_([MF])",
+               names_transform = list(age = as.integer),
+               values_to = "count")
+dfA %>% 
+  left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
+  select(-STE_CODE_2016, -name) %>% 
+  pivot_wider(names_from = abbrv,
+              values_from = count)
+
+dfB %>% 
+  adorn_totals(c("row", "col")) %>% 
+  adorn_percentages("row") %>% 
+  adorn_pct_formatting(digits = 2) %>%
+  adorn_ns(position = "front")
+```
+
+
+
+## (D) Join, nest and model
+
+
+```{r exercise4-plot, echo = FALSE, message = FALSE}
+nass.wheat %>% 
+  inner_join(nass.soybean, by = c("year", "state"),
+            suffix = c("_wheat", "_soybean")) %>% 
+  ggplot(aes(yield_wheat, yield_soybean)) + 
+  facet_wrap(~state) + geom_point() + 
+  geom_smooth(method = "lm") + 
+  labs(x = "Wheat", y = "Soybean", title = "Yield")
+```
+
+<div class="mytask">
+Above is the plot of the soy bean yield against wheat yield for each state from `nass.soybean` and `nass.wheat` data. The blue line that overlays the plot is a simple linear model. Construct a data frame that contains the intercept and slope and its standard errors of each model with rows arranged alphabetically by state. 
+</div>
+
+```{r exercise4, exercise = TRUE}
+nass.wheat %>% 
+  ...(nass.soybean, by = c("year", "state"),
+            suffix = c("_wheat", "_soybean")) %>% 
+  ...(state) %>% 
+  nest() %>% 
+  # fit the model and get the estimates and its std.err
+  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = ...)),
+         ests = list(tidy(...))) %>% 
+  unnest(ests) %>% 
+  # remove unnecessary statistics
+  select(-c(statistic, p.value)) %>% 
+  # convert to the final form as required
+  mutate(term = ifelse(term=="yield_soybean", "slope", term)) %>% 
+  ...(names_from = ...,
+      values_from = ...) %>% 
+  clean_names()
+```
+
+```{r exercise4-check}
+grade_this({
+  df <- nass.wheat %>% 
+    inner_join(nass.soybean, by = c("year", "state"),
+              suffix = c("_wheat", "_soybean")) %>% 
+    group_by(state) %>% 
+    nest() %>% 
+    # fit the model and get the estimates and its std.err
+    mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),
+           ests = list(tidy(model[[1]]))) %>% 
+    unnest(ests) %>% 
+    # remove unnecessary statistics
+    select(-c(statistic, p.value)) %>% 
+    # convert to the final form as required
+    mutate(term = ifelse(term=="yield_soybean", "slope", term)) %>% 
+    pivot_wider(names_from = term,
+                values_from = estimate:std.error) %>% 
+    clean_names()
+  pass_if_equal(df$estimate_slope, x = .result[[names(.result)[str_detect(names(.result), "slope") & !str_detect(names(.result), "error")]]])
+})
+```
+
+```{r exercise4-solution}
+nass.wheat %>% 
+  inner_join(nass.soybean, by = c("year", "state"),
+            suffix = c("_wheat", "_soybean")) %>% 
+  group_by(state) %>% 
+  nest() %>% 
+  # fit the model and get the estimates and its std.err
+  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),
+         ests = list(tidy(model[[1]]))) %>% 
+  unnest(ests) %>% 
+  # remove unnecessary statistics
+  select(-c(statistic, p.value)) %>% 
+  # convert to the final form as required
+  mutate(term = ifelse(term=="yield_soybean", "slope", term)) %>% 
+  pivot_wider(names_from = term,
+              values_from = estimate:std.error) %>% 
+  clean_names()
+```
+
+* Your output data should be like below
+
+```{r exercise4-print, echo = FALSE}
+nass.wheat %>% 
+  inner_join(nass.soybean, by = c("year", "state"),
+            suffix = c("_wheat", "_soybean")) %>% 
+  group_by(state) %>% 
+  nest() %>% 
+  # fit the model and get the estimates and its std.err
+  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),
+         ests = list(tidy(model[[1]]))) %>% 
+  unnest(ests) %>% 
+  # remove unnecessary statistics
+  select(-c(statistic, p.value)) %>% 
+  # convert to the final form as required
+  mutate(term = ifelse(term=="yield_soybean", "slope", term)) %>% 
+  pivot_wider(names_from = term,
+              values_from = estimate:std.error) %>% 
+  clean_names()
+```

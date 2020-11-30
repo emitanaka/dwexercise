@@ -3,6 +3,6 @@
 library(readxl)
 library(here)
 
-treefall <- as.data.frame(read_xlsx(here("data-raw/data/tree-fall/Lindenmayer et al Tree collapse data.xlsx")))
-usethis::use_data(treefall, overwrite = TRUE)
+tree_fall <- as.data.frame(read_xlsx(here("data-raw/data/tree-fall/Lindenmayer et al Tree collapse data.xlsx")))
+usethis::use_data(tree_fall, overwrite = TRUE)
 

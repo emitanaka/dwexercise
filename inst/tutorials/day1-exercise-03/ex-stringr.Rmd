@@ -28,7 +28,7 @@ description: >
 ```{r setup, include=FALSE, error = TRUE}
 library(learnr)
 library(tidyverse)
-data(awl, package = "dwexercise")
+library(dwexercise)
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -41,7 +41,7 @@ knitr::opts_chunk$set(error = TRUE)
 
 * This exercise will get you to work through the various functions in `stringr` and also let you practice using regular expressions. 
 * You will also be using some of the `dplyr` verbs you've just learnt.
-* As usual, the dataset and the `tidyverse` package (containing `dplyr` and `stringr`) have been already loaded for you.
+* As usual, the datasets and the `tidyverse` package (containing `dplyr` and `stringr`) have been already loaded for you.
 * Remember that there are multiple ways to achieve the answer.
 * You'll working will the Academic Word List (AWL). 
 * The AWL was developed by Averil Coxhead as her MA thesis at the School of Linguistics and Applied Language Studies at Victoria University of Wellington, New Zealand. 
@@ -50,13 +50,20 @@ knitr::opts_chunk$set(error = TRUE)
 * There list contains 10 sublist families ordered by their frequency such that sublist 1 contains the most common words in AWL with sublist 10 with the least common words in AWL. 
 * You can see the data set below.
 
-```{r exercise0, exercise = TRUE}
+```{r exercise0A, exercise = TRUE}
 data(awl, package = "dwexercise")
 awl
 ```
 
+* The other data set that you will use in this exercise is the `tidy_abstracts` that contain a collection of information on articles related to the packages used in this workshop.
 
-## (A) Word search
+```{r exercise0B, exercise = TRUE}
+data(tidy_abstracts, package = "dwexercise")
+tidy_abstracts
+```
+
+
+## (A) Playing with words
 
 
 <div class="mytask">
@@ -103,28 +110,10 @@ sum(str_ends(awl$word, "tions?"))
 ```
 
 <div class="mytask">
-How many words are there in AWL that ends with "tion" or "tions".
-</div>
-
-```{r exercise2, exercise = TRUE}
-sum(str_...(awl$word, ...))
-```
-
-```{r exercise2-check}
-grade_this({
-  pass_if_equal(sum(str_ends(awl$word, "tions?")))
-})
-```
-
-```{r exercise2-solution}
-sum(str_ends(awl$word, "tions?"))
-```
-
-<div class="mytask">
 What are the shortest and the longest words in AWL that end with "ed"? Have your last output with these words in a vector ordered alphabetically. 
 </div>
 
-```{r exercise2, exercise = TRUE}
+```{r exercise3, exercise = TRUE}
 awl %>% 
   ...(...(word, "ed")) %>% 
   ...(length = ...(word)) %>% 
@@ -133,7 +122,7 @@ awl %>%
   pull(word)
 ```
 
-```{r exercise2-check}
+```{r exercise3-check}
 grade_this({
   out <- awl %>% 
     filter(str_ends(word, "ed")) %>% 
@@ -146,7 +135,7 @@ grade_this({
 })
 ```
 
-```{r exercise2-solution}
+```{r exercise3-solution}
 awl %>% 
   filter(str_ends(word, "ed")) %>% 
   mutate(length = str_length(word)) %>% 
@@ -157,21 +146,142 @@ awl %>%
 
 
 <div class="mytask">
-
+Make a function that randomly combines words togther from AWL to make a random sentence. An English sentence is ordered usually ordered such that it is subject followed by verb then followed by object. Both subject and object are usually nouns. You may like to include modifiers like adjective and adverb. Remember a sentence begins with a title case and ends with a punctuation.
 </div>
 
-```{r exercise3, exercise = TRUE}
+* Note: there is no submit answer for this because the answer will be random!
 
+```{r exercise4, exercise = TRUE}
+random_sentence <- function() {
+  subject <- awl %>% 
+    filter(pos_tag == "noun") %>% 
+    pull(word) %>% 
+    sample(size = 1)
+  
+  ...
+  
+  ...("{...(subject)} {verb} {adjective} {object}.")
+}
+
+random_sentence()
 ```
 
-```{r exercise3-check}
-grade_this({
 
+```{r exercise4-solution}
+random_sentence <- function() {
+  subject <- awl %>% 
+    filter(pos_tag == "noun") %>% 
+    pull(word) %>% 
+    sample(size = 1)
+  
+  verb <- awl %>% 
+    filter(pos_tag == "verb") %>% 
+    sample_n(size = 1) %>%  # this also works
+    pull(word)
+  
+  # you could also make an internal function
+  sample_one_word <- function(pos_tag) {
+    awl %>% 
+      filter(pos_tag == .env$pos_tag) %>% # note here need to be explicit due to data masking
+      sample_n(size = 1) %>%  
+      pull(word)
+  }
+  
+  adjective <- sample_one_word("adjective")
+  object <- sample_one_word("noun")
+  
+  str_glue("{str_to_title(subject)} {verb} {adjective} {object}.")
+}
+
+random_sentence()
+```
+
+* Feel free to post your random sentence in the zoom chat!
+
+## (B) Analysing and manipulating texts
+
+<div class="mytask">
+Create a new column in `tidy_abstracts` called `num_aw` that contains the number of words in the abstract that are in the AWL (ignoring variations of words).
+</div>
+
+```{r exercise5, exercise = TRUE}
+aw_pattern <- ...
+tidy_abstracts %>% 
+  ...(num_aw = ...(abstract, aw_pattern))
+```
+
+```{r exercise5-check}
+grade_this({
+  aw_pattern <- str_c("(", str_c(awl$word, collapse = "|"), ")")
+  out <- tidy_abstracts %>% 
+    mutate(num_aw = str_count(abstract, aw_pattern))
   
   pass_if_equal(out)
 })
 ```
 
-```{r exercise3-solution}
-
+```{r exercise5-solution}
+aw_pattern <- str_c("(", str_c(awl$word, collapse = "|"), ")")
+tidy_abstracts %>% 
+  mutate(num_aw = str_count(abstract, aw_pattern))
 ```
+
+
+<div class="mytask">
+Create a new column called `citation` that has a citation format with the last name of the first author and the year of publication in bracket, e.g. "Wickham (2011)". If there are more than one author add "et al." before the year, e.g. "Grolemund et al. (2011)". 
+</div>
+
+```{r exercise6, exercise = TRUE}
+tidy_abstracts %>% 
+  mutate(...,
+         citation = ...) 
+```
+
+```{r exercise6-check}
+grade_this({
+  out <- tidy_abstracts %>% 
+    mutate(last_name = str_match(authors, "^([A-Za-z]+),")[, 2],
+           nauthors = str_count(authors, " and ")  + 1,
+           etal = if_else(nauthors > 1, "et al. ", ""),
+           citation = str_glue("{last_name} {etal}({year})")) %>% 
+    select(-c(last_name, nauthors, etal))
+  
+  pass_if_equal(out$citation, x = .result$citation)
+})
+```
+
+```{r exercise6-solution}
+tidy_abstracts %>% 
+  mutate(last_name = str_match(authors, "^([A-Za-z]+),")[, 2],
+         nauthors = str_count(authors, " and ")  + 1,
+         etal = if_else(nauthors > 1, "et al. ", ""),
+         citation = str_glue("{last_name} {etal}({year})")) %>% 
+  select(-c(last_name, nauthors, etal))
+```
+
+<div class="mytask">
+Typical length of an abstract is about 100 to 500 words. Add a new column to `tidy_abstracts` called `nwords` that contain the number of words in the abstract. You may need to use a function you haven't seen yet for the pattern. 
+</div>
+
+```{r exercise7, exercise = TRUE}
+tidy_abstracts %>% 
+  ...(nword = ...(abstract, ...)) 
+```
+
+```{r exercise7-check}
+grade_this({
+  out <- tidy_abstracts %>% 
+    mutate(nword = str_count(abstract, boundary("word"))) 
+  
+  pass_if_equal(out$nword, x = .result$nword)
+})
+```
+
+```{r exercise7-solution}
+tidy_abstracts %>% 
+    mutate(nword = str_count(abstract, boundary("word"))) 
+```
+
+<details><summary></summary>
+Check out the `boundary` function.
+</details>

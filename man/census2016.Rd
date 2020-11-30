@@ -15,7 +15,7 @@ An object of class \code{data.frame} with 9 rows and 307 columns.
 
 An object of class \code{data.frame} with 9 rows and 481 columns.
 
-An object of class \code{data.frame} with 9 rows and 2 columns.
+An object of class \code{data.frame} with 9 rows and 3 columns.
 }
 \source{
 Based on Australian Bureau of Statistics 2016 Census Data
@@ -30,6 +30,13 @@ census_2016_G17
 census_2016_STE
 }
 \description{
-Australian Bureau of Statistics 2016 Census Data
+All the numerical values are counts according to the category given in the header and state or territory given as code `STE_CODE_2016` in row.
+The data `census_2016_STE` has the code translation to the state or territory name.
+
+Table G01 has counts of selected person characteristics by sex.
+
+Table G04 has counts of poeple by age and sex.
+
+Table G17 has counts of people by total weekly personal income by sex and age.
 }
 \keyword{datasets}

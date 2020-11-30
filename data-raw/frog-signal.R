@@ -4,6 +4,7 @@ library(tidyverse)
 library(readxl)
 library(here)
 
-frogsignal <- as.data.frame(read_xlsx(here("data-raw/data/frog-signal/Multivariate selection in Hyla chrysoscelis - Evolution.xlsx"))) %>%
-  mutate(StandardAverage = as.numeric(StandardAverage))
-usethis::use_data(frogsignal, overwrite = TRUE)
+frog_signal <- as.data.frame(read_xlsx(here("data-raw/data/frog-signal/Multivariate selection in Hyla chrysoscelis - Evolution.xlsx"))) %>%
+  mutate(StandardAverage = as.numeric(StandardAverage),
+         FrogID = as.character(FrogID))
+usethis::use_data(frog_signal, overwrite = TRUE)

@@ -1,0 +1,257 @@
+---
+title: "Day 2 Exercise 3"
+subtitle: "Dealing with dates with `lubridate`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+description: >
+  Dealing with dates with lubridate
+---
+
+```{css, echo = FALSE}
+.mytask {
+  background: #82CAFA;
+  border: 1.2px dashed #151B54;
+  color: #151B54;
+  padding: 10px;
+  margin: auto;
+  text-align: center;
+}
+.mytask:before {
+  content: "Task";
+  font-weight: bold;
+}
+```
+
+```{r setup, include=FALSE, error = TRUE}
+library(learnr)
+library(tidyverse)
+library(janitor)
+library(dwexercise)
+if("gradethis" %in% installed.packages()) {
+  gradethis::gradethis_setup()
+} 
+tutorial_options(exercise.timelimit = 60,
+                 exercise.eval = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+```
+
+## Welcome
+
+* You will be working with dates and times in these exercises.
+* Note that answers can be achieved in multiple ways. 
+* The `tidyverse` and `lubridate` packages and the datasets have been loaded for all exercises.
+
+* The `oz_climate` data contains result from a survey about attitude towards climate change in Australia
+* The `oz_climate_qbook` data contains the translation of the column label in `oz_climate` to the actual question asked
+
+```{r exercise0A, exercise = TRUE}
+data(oz_climate, package = "dwexercise")
+oz_climate
+```
+
+```{r exercise0B, exercise = TRUE}
+data(oz_climate_qbook, package = "dwexercise")
+oz_climate_qbook
+```
+
+
+## (A) Computing time difference
+
+<div class="mytask">
+Compute the five number summary for the time taken to complete the survey for `oz_climate` by filling in `...` below.
+</div>
+
+```{r exercise1, exercise = TRUE}
+oz_climate %>% 
+  select(StartDate, EndDate) %>% 
+  ... %>% 
+  pull(Time) %>% 
+  fivenum()
+```
+
+```{r exercise1-check}
+grade_this({
+  df <- oz_climate %>% 
+    select(StartDate, EndDate) %>% 
+    mutate(StartDate = mdy_hms(StartDate),
+           EndDate = mdy_hms(EndDate),
+           Time = EndDate - StartDate) %>% 
+    pull(Time) %>% 
+    fivenum()
+  pass_if_equal(df)
+})
+```
+
+```{r exercise1-solution}
+oz_climate %>% 
+  select(StartDate, EndDate) %>% 
+  mutate(StartDate = mdy_hms(StartDate),
+         EndDate = mdy_hms(EndDate),
+         Time = EndDate - StartDate) %>% 
+  pull(Time) %>% 
+  fivenum()
+```
+
+
+## (B) Filter by date
+
+<div class="mytask">
+Filter `oz_climate` to surveys that were completed on or after August 13th 2011.
+</div>
+
+```{r exercise2, exercise = TRUE}
+oz_climate %>% 
+  mutate(EndDate = mdy_hms(EndDate)) %>% 
+  filter(EndDate > ymd("20110813")) 
+```
+
+```{r exercise2-check}
+grade_this({
+  df <- oz_climate %>% 
+    mutate(EndDate = mdy_hms(EndDate)) %>% 
+    filter(EndDate > ymd("20110813")) 
+  pass_if_equal(df$EndDate, x = .result$EndDate)
+})
+```
+
+```{r exercise2-solution}
+oz_climate %>% 
+  mutate(EndDate = mdy_hms(EndDate)) %>% 
+  filter(EndDate > ymd("20110813")) 
+```
+
+## (C) Convert string to date, datetime or period
+
+<div class="mytask">
+Convert each string below to appropriate date, time or datetime objects.
+</div>
+
+```{r exercise3, exercise = TRUE}
+...("May 2nd, 2014")
+```
+
+```{r exercise3-check}
+grade_this({
+  pass_if_equal(mdy("May 2nd, 2014"))
+})
+```
+
+```{r exercise3-solution}
+mdy("May 2nd, 2014")
+```
+
+
+```{r exercise4, exercise = TRUE}
+...("Jan 30th (2019)")
+```
+
+```{r exercise4-check}
+grade_this({
+  pass_if_equal(mdy("Jan 30th (2019)"))
+})
+```
+
+```{r exercise4-solution}
+mdy("Jan 30th (2019)")
+```
+
+```{r exercise5, exercise = TRUE}
+...("2020-12-29 08:30:27.243")
+```
+
+```{r exercise5-check}
+grade_this({
+  pass_if_equal(ymd_hms("2020-12-29 08:30:27.243"))
+})
+```
+
+```{r exercise5-solution}
+ymd_hms("2020-12-29 08:30:27.243")
+```
+
+```{r exercise6, exercise = TRUE}
+...("Jun 28 2018 8:40AM")
+```
+
+```{r exercise6-check}
+grade_this({
+  pass_if_equal(mdy_hm("Jun 28 2018 8:40AM"))
+})
+```
+
+```{r exercise6-solution}
+mdy_hm("Jun 28 2018 8:40AM")
+```
+
+```{r exercise7, exercise = TRUE}
+...("8:40") # 8 hours and 40 minutes
+```
+
+```{r exercise7-check}
+grade_this({
+  pass_if_equal(hm("8:40"))
+})
+```
+
+```{r exercise7-solution}
+hm("8:40")
+```
+
+## (D) When was it?
+
+<div class="mytask">
+What day of the week was Christmas in 1990? (Return the day abbreviated)
+</div>
+
+```{r exercise8, exercise = TRUE}
+
+```
+
+```{r exercise8-check}
+grade_this({
+  pass_if_equal(wday(dmy("25/12/90"), label = TRUE))
+})
+```
+
+```{r exercise8-solution}
+wday(dmy("25/12/90"), label = TRUE)
+```
+
+<div class="mytask">
+What day of the year is it today?
+</div>
+
+```{r exercise9, exercise = TRUE}
+
+```
+
+```{r exercise9-check}
+grade_this({
+  pass_if_equal(yday(today()))
+})
+```
+
+```{r exercise9-solution}
+yday(today())
+```
+
+<div class="mytask">
+What time is it now in Singapore? (Output as `POSIXct`)
+</div>
+
+```{r exercise10, exercise = TRUE}
+
+```
+
+```{r exercise10-check}
+grade_this({
+  pass_if_equal(now(tzone = "Singapore"))
+})
+```
+
+```{r exercise10-solution}
+now(tzone = "Singapore")
+```

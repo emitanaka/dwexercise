@@ -11,7 +11,8 @@ census_2016_STE <- data.frame(code = 1:9,
                                        "Tasmania",
                                        "Northern Territory",
                                        "Australian Capital Territory",
-                                       "Other Territories"))
+                                       "Other Territories"),
+                              abbrv = c("NSW", "Vic", "Qld", "SA", "WA", "Tas", "NT", "ACT", "OT"))
 census_2016_G01 <- read.csv(here("data-raw/data/census2016/2016Census_G01_AUS_STE.csv"))
 census_2016_G04A <- read.csv(here("data-raw/data/census2016/2016Census_G04A_AUS_STE.csv"))
 census_2016_G04B <- read.csv(here("data-raw/data/census2016/2016Census_G04B_AUS_STE.csv"))
