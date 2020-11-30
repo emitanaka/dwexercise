@@ -17,14 +17,14 @@ In order to launch the exercises, use one of the commands below.
 
 ```r
 # Day 1
-learnr::run_tutorial("day1-exercises-01", package = "dwexercise")
-learnr::run_tutorial("day1-exercises-02", package = "dwexercise")
-learnr::run_tutorial("day1-exercises-03", package = "dwexercise")
-learnr::run_tutorial("day1-exercises-04", package = "dwexercise")
+learnr::run_tutorial("day1-exercise-01", package = "dwexercise")
+learnr::run_tutorial("day1-exercise-02", package = "dwexercise")
+learnr::run_tutorial("day1-exercise-03", package = "dwexercise")
+learnr::run_tutorial("day1-exercise-04", package = "dwexercise")
 
 # Day 2
-learnr::run_tutorial("day2-exercises-01", package = "dwexercise")
-learnr::run_tutorial("day2-exercises-02", package = "dwexercise")
-learnr::run_tutorial("day2-exercises-03", package = "dwexercise")
-learnr::run_tutorial("day2-exercises-04", package = "dwexercise")
+learnr::run_tutorial("day2-exercise-01", package = "dwexercise")
+learnr::run_tutorial("day2-exercise-02", package = "dwexercise")
+learnr::run_tutorial("day2-exercise-03", package = "dwexercise")
+learnr::run_tutorial("day2-exercise-04", package = "dwexercise")
 ```
