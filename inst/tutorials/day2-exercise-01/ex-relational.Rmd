@@ -146,7 +146,7 @@ Given the transformed data from (A), now match up with the data dictionary `cens
 </div>
 
 ```{r exercise2, exercise = TRUE}
-dfA %>% 
+dfB <- dfA %>% 
   ...(census_2016_STE, by = ...) %>% 
   select(-STE_CODE_2016, -name) %>% 
   ...
@@ -172,7 +172,7 @@ grade_this({
 ```
 
 ```{r exercise2-solution}
-dfA %>% 
+dfB <- dfA %>% 
   left_join(census_2016_STE, by = c("STE_CODE_2016" = "code")) %>% 
   select(-STE_CODE_2016, -name) %>% 
   pivot_wider(names_from = abbrv,

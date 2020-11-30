@@ -42,14 +42,18 @@ knitr::opts_chunk$set(error = TRUE)
 * In this exercise you will practice using `purrr` as well as other data wrangling techniques you have learnt in the course.
 * There are multiple ways to achieve the answers.
 * Note that you don't necessary have to `purrr` for each question!
-* The `tidyverse` and `agridat` packages and the datasets have been loaded for all exercises.
+* The `tidyverse` package (which includes `purrr`) and the datasets have been loaded for all exercises.
 
 ```{r exercise0A, exercise = TRUE}
 frog_signal
 ```
 
 ```{r exercise0B, exercise = TRUE}
-oz_climate
+oz_climate[1:3, ]
+# ===only issue for online version===
+# Note printing the whole data causes: 
+# Error : pandoc document conversion failed with error 137
+# looks like some issue with learnr?
 ```
 
 ## (A) Data set characteristics 
@@ -132,12 +136,10 @@ frog_signal %>%
 
 ## (C) Simulation study: misspecified model
 
-<div class="mytask">
-Let's simulate a data with 200 observations from a simple linear model with intercept is 1 and slope is 2 and where the error distribution is from a $t_3$ distribution.  
-</div>
+* Let's simulate a data with 200 observations from a simple linear model with intercept is 1 and slope is 2 and where the error distribution is from a $t_3$ distribution.  
 
 
-```{r exercise4, exercise = TRUE}
+```{r exercise4-show, exercise = TRUE}
 set.seed(1)
 sim <- tibble(1:200) %>% 
   mutate(x = runif(n(), 0, 1), # some independent covariates
@@ -147,18 +149,41 @@ ests <- coef(lm(y ~ x, data = sim))
 tibble(intercept = ests[1], slope = ests[2]) # how close are these to the true values?
 ```
 
-```{r exercise4-check}
-grade_this({
-  df <- frog_signal %>% 
-    select(where(is.numeric)) %>% 
-    drop_na() %>% 
-    scale() %>% 
-    prcomp()
-  pass_if_equal(df)
-})
+<div class="mytask">
+Now repeat the above simulation 100 times. Compute the mean and sample standard deviation of the absolute difference between estimated intercept and slope to its true value.
+</div>
+
+```{r exercise4, exercise = TRUE}
+set.seed(1)
+nsim <- 100
+...
 ```
 
 ```{r exercise4-solution}
+set.seed(1)
+nsim <- 100
+df <- map_dfr(1:nsim, ~{
+  sim <- tibble(1:200) %>% 
+    mutate(x = runif(n(), 0, 1), # some independent covariates
+           y = 1 + 2 * x + rt(n(), 3)) 
+  ests <- coef(lm(y ~ x, data = sim))
+  tibble(intercept = ests[1], slope = ests[2], sim =.x)
+})
+
+df %>% 
+  mutate(intercept = abs(intercept - 1),
+         slope = abs(slope - 2)) %>% 
+  select(-sim) %>% 
+  summarise(across(intercept:slope, 
+                   list(mean = mean,
+                        sd = sd),
+                   .names = "{.col}_{.fn}")) 
+```
+
+* The mean and sample standard deviation of the absolute difference between estimated intercept and slope to its true value is shown below.
+* How closely does it match up with yours?
+
+```{r exercise4-print, echo = FALSE, message = FALSE, warning = FALSE}
 set.seed(1)
 df <- map_dfr(1:100, ~{
   sim <- tibble(1:200) %>% 

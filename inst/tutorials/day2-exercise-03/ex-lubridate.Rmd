@@ -28,8 +28,8 @@ description: >
 ```{r setup, include=FALSE, error = TRUE}
 library(learnr)
 library(tidyverse)
-library(janitor)
 library(dwexercise)
+library(lubridate)
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -49,7 +49,11 @@ knitr::opts_chunk$set(error = TRUE)
 
 ```{r exercise0A, exercise = TRUE}
 data(oz_climate, package = "dwexercise")
-oz_climate
+oz_climate[1:3, ]
+# ===only issue for online version===
+# Note printing the whole data causes: 
+# Error : pandoc document conversion failed with error 137
+# looks like some issue with learnr?
 ```
 
 ```{r exercise0B, exercise = TRUE}
@@ -104,15 +108,17 @@ Filter `oz_climate` to surveys that were completed on or after August 13th 2011.
 
 ```{r exercise2, exercise = TRUE}
 oz_climate %>% 
-  mutate(EndDate = mdy_hms(EndDate)) %>% 
-  filter(EndDate > ymd("20110813")) 
+  mutate(...) %>% 
+  filter(...) %>% 
+  select(StartDate, EndDate)
 ```
 
 ```{r exercise2-check}
 grade_this({
   df <- oz_climate %>% 
     mutate(EndDate = mdy_hms(EndDate)) %>% 
-    filter(EndDate > ymd("20110813")) 
+    filter(EndDate > ymd("20110813")) %>% 
+    select(StartDate, EndDate)
   pass_if_equal(df$EndDate, x = .result$EndDate)
 })
 ```
@@ -120,7 +126,8 @@ grade_this({
 ```{r exercise2-solution}
 oz_climate %>% 
   mutate(EndDate = mdy_hms(EndDate)) %>% 
-  filter(EndDate > ymd("20110813")) 
+  filter(EndDate > ymd("20110813")) %>% 
+  select(StartDate, EndDate)
 ```
 
 ## (C) Convert string to date, datetime or period
@@ -239,7 +246,7 @@ yday(today())
 ```
 
 <div class="mytask">
-What time is it now in Singapore? (Output as `POSIXct`)
+What hour is it now in Singapore? Return as integer in 24-hour time.
 </div>
 
 ```{r exercise10, exercise = TRUE}
@@ -248,10 +255,10 @@ What time is it now in Singapore? (Output as `POSIXct`)
 
 ```{r exercise10-check}
 grade_this({
-  pass_if_equal(now(tzone = "Singapore"))
+  pass_if_equal(hour(now(tzone = "Singapore")))
 })
 ```
 
 ```{r exercise10-solution}
-now(tzone = "Singapore")
+hour(now(tzone = "Singapore"))
 ```

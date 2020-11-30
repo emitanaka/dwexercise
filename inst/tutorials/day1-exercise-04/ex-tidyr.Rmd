@@ -73,7 +73,7 @@ frog_signal %>%
                values_to = "response", 
                names_transform = list(call = function(x) {
                   ... })) %>% 
-  mutate(across(CD:PR, function(x) ifelse(call=="Standard", NA, x)), # can you guess what across does?
+  mutate(across(CD:PR, function(x) ifelse(call=="Standard", NA, x)),
          TwoChoice = ifelse(call=="Both", TwoChoice, call))
 ```
 
@@ -179,7 +179,7 @@ frog_signal %>%
 
 * Below is the expected output
 
-```{r exercise4-print, echo = FALSE}
+```{r exercise4-print, echo = FALSE, message = FALSE}
 frog_signal %>% 
   filter(!is.na(SpeakerPosition)) %>% 
   group_by(SpeakerPosition) %>% 
@@ -233,7 +233,7 @@ tidy_abstracts %>%
 
 * Below is the expected output
 
-```{r exercise2-print, echo = FALSE}
+```{r exercise2-print, echo = FALSE, message = FALSE}
 tidy_abstracts %>% 
   separate_rows(authors, sep = " and ") %>% 
   rename(author = authors) %>% 

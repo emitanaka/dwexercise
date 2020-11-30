@@ -30,7 +30,6 @@ library(learnr)
 library(tidyverse)
 library(janitor)
 library(dwexercise)
-library(agridat)
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -50,7 +49,11 @@ knitr::opts_chunk$set(error = TRUE)
 
 ```{r exercise0A, exercise = TRUE}
 data(oz_climate, package = "dwexercise")
-oz_climate
+oz_climate[1:3, ]
+# ===only issue for online version===
+# Note printing the whole data causes: 
+# Error : pandoc document conversion failed with error 137
+# looks like some issue with learnr?
 ```
 
 ```{r exercise0B, exercise = TRUE}
@@ -191,7 +194,7 @@ airline %>%
 
 * Your output should look like below
 
-```{r exercise2-print, echo = FALSE}
+```{r exercise2-print, echo = FALSE, message = FALSE}
 airline %>% 
   # replace other with user input
   mutate(flight_arrangment = case_when(

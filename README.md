@@ -7,7 +7,7 @@ remotes::install_github("rstudio/learnr")
 remotes::install_github("rstudio-education/gradethis")
 ```
 
-You can install this workshop packages as below.
+You can install this workshop package as below.
 
 ```r
 remotes::install_github("emitanaka/dwexercise")

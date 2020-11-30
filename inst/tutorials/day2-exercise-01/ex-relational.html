@@ -133,9 +133,9 @@ $(document).ready(function () {
 <div id="section-welcome" class="section level2">
 <h2>Welcome</h2>
 <ul>
-<li><p>These exercises have been</p></li>
+<li><p>These exercises have get you to work with combining datasets and appending of other information (e.g. totals, percentages, or model output) using <code>janitor</code> and <code>broom</code>.</p></li>
 <li><p>Note that answers can be achieved in multiple ways.</p></li>
-<li><p>As usual, the <code>tidyverse</code> package and the datasets have been loaded for all exercises.</p></li>
+<li><p>The <code>tidyverse</code>, <code>janitor</code>, and <code>broom</code> packages and the datasets have been loaded for all exercises.</p></li>
 <li><p>The data <code>census_2016_G04</code> contains the number of people for each age and sex combination by Australian states and territories from the 2016 census.</p></li>
 </ul>
 <div class="tutorial-exercise" data-label="exercise0A" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -207,14 +207,14 @@ nass.soybean</code></pre>
 <p>Given the transformed data from (A), now match up with the data dictionary <code>census_2016_STE</code> to get the actual names of the states and territories; and then transform the data to a wide format as shown below.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise2" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>dfA %&gt;% 
+<pre class="text"><code>dfB &lt;- dfA %&gt;% 
   ...(census_2016_STE, by = ...) %&gt;% 
   select(-STE_CODE_2016, -name) %&gt;% 
   ...</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise-support" data-label="exercise2-solution" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>dfA %&gt;% 
+<pre class="text"><code>dfB &lt;- dfA %&gt;% 
   left_join(census_2016_STE, by = c(&quot;STE_CODE_2016&quot; = &quot;code&quot;)) %&gt;% 
   select(-STE_CODE_2016, -name) %&gt;% 
   pivot_wider(names_from = abbrv,
@@ -263,24 +263,24 @@ nass.soybean</code></pre>
 <h2>(D) Join, nest and model</h2>
 <p><img src="ex-relational_files/figure-html/exercise4-plot-1.png" width="624" /></p>
 <div class="mytask">
-<p>Below is the plot of the soy bean yield against wheat yield for each state from <code>nass.soybean</code> and <code>nass.wheat</code> data. The blue line that overlays the plot is a simple linear model. Construct a data frame that contains the intercept and slope and its standard errors of each model with rows arranged alphabetically by state.</p>
+<p>Above is the plot of the soy bean yield against wheat yield for each state from <code>nass.soybean</code> and <code>nass.wheat</code> data. The blue line that overlays the plot is a simple linear model. Construct a data frame that contains the intercept and slope and its standard errors of each model with rows arranged alphabetically by state.</p>
 </div>
 <div class="tutorial-exercise" data-label="exercise4" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>nass.wheat %&gt;% 
-  inner_join(nass.soybean, by = c(&quot;year&quot;, &quot;state&quot;),
+  ...(nass.soybean, by = c(&quot;year&quot;, &quot;state&quot;),
             suffix = c(&quot;_wheat&quot;, &quot;_soybean&quot;)) %&gt;% 
-  group_by(state) %&gt;% 
+  ...(state) %&gt;% 
   nest() %&gt;% 
   # fit the model and get the estimates and its std.err
-  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),
-         ests = list(tidy(model[[1]]))) %&gt;% 
+  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = ...)),
+         ests = list(tidy(...))) %&gt;% 
   unnest(ests) %&gt;% 
   # remove unnecessary statistics
   select(-c(statistic, p.value)) %&gt;% 
   # convert to the final form as required
   mutate(term = ifelse(term==&quot;yield_soybean&quot;, &quot;slope&quot;, term)) %&gt;% 
-  pivot_wider(names_from = term,
-              values_from = estimate:std.error) %&gt;% 
+  ...(names_from = ...,
+      values_from = ...) %&gt;% 
   clean_names()</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true,"caption":"R code"}</script>
 </div>
@@ -590,7 +590,7 @@ output$`tutorial-exercise-exercise2-output` <- renderUI({
 learnr:::store_exercise_cache("exercise2", list(setup = "dfA <- census_2016_G04 %>% \n  select(STE_CODE_2016 | matches(\"^Age_yr_[0-9]{1,2}_[MF]$\")) %>% \n  pivot_longer(-STE_CODE_2016,\n               names_to = c(\"age\", \"sex\"),\n               names_pattern = \"^Age_yr_([0-9]{1,2})_([MF])\",\n               names_transform = list(age = as.integer),\n               values_to = \"count\")", 
     chunks = list(list(label = "exercise2-setup", code = "dfA <- census_2016_G04 %>% \n  select(STE_CODE_2016 | matches(\"^Age_yr_[0-9]{1,2}_[MF]$\")) %>% \n  pivot_longer(-STE_CODE_2016,\n               names_to = c(\"age\", \"sex\"),\n               names_pattern = \"^Age_yr_([0-9]{1,2})_([MF])\",\n               names_transform = list(age = as.integer),\n               values_to = \"count\")", 
         opts = list(label = "\"exercise2-setup\"", echo = "FALSE"), 
-        engine = "r"), list(label = "exercise2", code = "dfA %>% \n  ...(census_2016_STE, by = ...) %>% \n  select(-STE_CODE_2016, -name) %>% \n  ...", 
+        engine = "r"), list(label = "exercise2", code = "dfB <- dfA %>% \n  ...(census_2016_STE, by = ...) %>% \n  select(-STE_CODE_2016, -name) %>% \n  ...", 
         opts = list(label = "\"exercise2\"", exercise = "TRUE"), 
         engine = "r")), code_check = NULL, error_check = NULL, 
     check = structure(c("grade_this({", "  dfA <- census_2016_G04 %>% ", 
@@ -602,7 +602,7 @@ learnr:::store_exercise_cache("exercise2", list(setup = "dfA <- census_2016_G04 
     "    left_join(census_2016_STE, by = c(\"STE_CODE_2016\" = \"code\")) %>% ", 
     "    select(-STE_CODE_2016, -name) %>% ", "    pivot_wider(names_from = abbrv,", 
     "                values_from = count)", "  pass_if_equal(df)", 
-    "})"), chunk_opts = list(label = "exercise2-check")), solution = structure(c("dfA %>% ", 
+    "})"), chunk_opts = list(label = "exercise2-check")), solution = structure(c("dfB <- dfA %>% ", 
     "  left_join(census_2016_STE, by = c(\"STE_CODE_2016\" = \"code\")) %>% ", 
     "  select(-STE_CODE_2016, -name) %>% ", "  pivot_wider(names_from = abbrv,", 
     "              values_from = count)"), chunk_opts = list(
@@ -625,7 +625,7 @@ learnr:::store_exercise_cache("exercise2", list(setup = "dfA <- census_2016_G04 
         max.print = 1000, tutorial = TRUE, exercise.timelimit = 60, 
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
-        label = "exercise2", exercise = TRUE, code = c("dfA %>% ", 
+        label = "exercise2", exercise = TRUE, code = c("dfB <- dfA %>% ", 
         "  ...(census_2016_STE, by = ...) %>% ", "  select(-STE_CODE_2016, -name) %>% ", 
         "  ..."), out.width.px = 624, out.height.px = 384, params.src = "exercise2, exercise = TRUE", 
         fig.num = 0, exercise.df_print = "paged"), engine = "r"))
@@ -694,7 +694,7 @@ output$`tutorial-exercise-exercise4-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list(label = "exercise4", code = "nass.wheat %>% \n  inner_join(nass.soybean, by = c(\"year\", \"state\"),\n            suffix = c(\"_wheat\", \"_soybean\")) %>% \n  group_by(state) %>% \n  nest() %>% \n  # fit the model and get the estimates and its std.err\n  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),\n         ests = list(tidy(model[[1]]))) %>% \n  unnest(ests) %>% \n  # remove unnecessary statistics\n  select(-c(statistic, p.value)) %>% \n  # convert to the final form as required\n  mutate(term = ifelse(term==\"yield_soybean\", \"slope\", term)) %>% \n  pivot_wider(names_from = term,\n              values_from = estimate:std.error) %>% \n  clean_names()", 
+learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list(label = "exercise4", code = "nass.wheat %>% \n  ...(nass.soybean, by = c(\"year\", \"state\"),\n            suffix = c(\"_wheat\", \"_soybean\")) %>% \n  ...(state) %>% \n  nest() %>% \n  # fit the model and get the estimates and its std.err\n  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = ...)),\n         ests = list(tidy(...))) %>% \n  unnest(ests) %>% \n  # remove unnecessary statistics\n  select(-c(statistic, p.value)) %>% \n  # convert to the final form as required\n  mutate(term = ifelse(term==\"yield_soybean\", \"slope\", term)) %>% \n  ...(names_from = ...,\n      values_from = ...) %>% \n  clean_names()", 
     opts = list(label = "\"exercise4\"", exercise = "TRUE"), 
     engine = "r")), code_check = NULL, error_check = NULL, check = structure(c("grade_this({", 
 "  df <- nass.wheat %>% ", "    inner_join(nass.soybean, by = c(\"year\", \"state\"),", 
@@ -735,14 +735,13 @@ learnr:::store_exercise_cache("exercise4", list(setup = NULL, chunks = list(list
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
         label = "exercise4", exercise = TRUE, code = c("nass.wheat %>% ", 
-        "  inner_join(nass.soybean, by = c(\"year\", \"state\"),", 
-        "            suffix = c(\"_wheat\", \"_soybean\")) %>% ", 
-        "  group_by(state) %>% ", "  nest() %>% ", "  # fit the model and get the estimates and its std.err", 
-        "  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = data[[1]])),", 
-        "         ests = list(tidy(model[[1]]))) %>% ", "  unnest(ests) %>% ", 
+        "  ...(nass.soybean, by = c(\"year\", \"state\"),", "            suffix = c(\"_wheat\", \"_soybean\")) %>% ", 
+        "  ...(state) %>% ", "  nest() %>% ", "  # fit the model and get the estimates and its std.err", 
+        "  mutate(model = list(lm(yield_wheat ~ yield_soybean, data = ...)),", 
+        "         ests = list(tidy(...))) %>% ", "  unnest(ests) %>% ", 
         "  # remove unnecessary statistics", "  select(-c(statistic, p.value)) %>% ", 
         "  # convert to the final form as required", "  mutate(term = ifelse(term==\"yield_soybean\", \"slope\", term)) %>% ", 
-        "  pivot_wider(names_from = term,", "              values_from = estimate:std.error) %>% ", 
+        "  ...(names_from = ...,", "      values_from = ...) %>% ", 
         "  clean_names()"), out.width.px = 624, out.height.px = 384, 
         params.src = "exercise4, exercise = TRUE", fig.num = 0, 
         exercise.df_print = "paged"), engine = "r"))

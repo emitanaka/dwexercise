@@ -135,13 +135,16 @@ $(document).ready(function () {
 <ul>
 <li><p>You will be working with factors and how to manipulate them in this exercise.</p></li>
 <li><p>Note that answers can be achieved in multiple ways.</p></li>
-<li><p>As usual, the <code>tidyverse</code> package (which includes <code>forcats</code>) and the datasets have been loaded for all exercises.</p></li>
+<li><p>The <code>tidyverse</code> package (which includes <code>forcats</code>) and the <code>janitor</code> package as well as the datasets have been loaded for all exercises.</p></li>
 <li><p>The <code>oz_climate</code> data that a survey about attitude towards climate change in Australia</p></li>
 <li><p>The <code>oz_climate_qbook</code> data contains the translation of the column label in <code>oz_climate</code> to the actual question asked</p></li>
 </ul>
 <div class="tutorial-exercise" data-label="exercise0A" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>data(oz_climate, package = &quot;dwexercise&quot;)
-oz_climate</code></pre>
+oz_climate[1:3, ]
+# Note printing the whole data causes: 
+# Error : pandoc document conversion failed with error 137
+# looks like some issue with learnr?</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"R code"}</script>
 </div>
 <div class="tutorial-exercise" data-label="exercise0B" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
@@ -240,7 +243,6 @@ airline</code></pre>
 <ul>
 <li>Your output should look like below</li>
 </ul>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["f"],"name":[1],"type":["fct"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Aggie Travel web portal","2":"125"},{"1":"Google Flights","2":"86"},{"1":"Airline website","2":"54"},{"1":"Kayak","2":"42"},{"1":"Expedia","2":"37"},{"1":"Administrative staff makes my arrangements","2":"22"},{"1":"Skyscanner","2":"10"},{"1":"Orbitz","2":"7"},{"1":"Priceline","2":"7"},{"1":"Travelocity","2":"6"},{"1":"Other","2":"20"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -315,9 +317,7 @@ oz_climate %&gt;%
 library(learnr)
 library(tidyverse)
 library(janitor)
-library(broom)
 library(dwexercise)
-library(agridat)
 if("gradethis" %in% installed.packages()) {
   gradethis::gradethis_setup()
 } 
@@ -342,50 +342,34 @@ session$onSessionEnded(function() {
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"library(dwexercise)", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"library(dwexercise)", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"library(dwexercise)", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_setup_chunk("__setup__", c("library(learnr)", "library(tidyverse)", "library(janitor)", 
-"library(broom)", "library(dwexercise)", "library(agridat)", 
-"if(\"gradethis\" %in% installed.packages()) {", "  gradethis::gradethis_setup()", 
-"} ", "tutorial_options(exercise.timelimit = 60,", "                 exercise.eval = FALSE)", 
-"knitr::opts_chunk$set(error = TRUE)"), overwrite = FALSE)
+"library(dwexercise)", "if(\"gradethis\" %in% installed.packages()) {", 
+"  gradethis::gradethis_setup()", "} ", "tutorial_options(exercise.timelimit = 60,", 
+"                 exercise.eval = FALSE)", "knitr::opts_chunk$set(error = TRUE)"
+), overwrite = FALSE)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -396,7 +380,7 @@ output$`tutorial-exercise-exercise0A-output` <- renderUI({
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("exercise0A", list(setup = NULL, chunks = list(list(label = "exercise0A", code = "data(oz_climate, package = \"dwexercise\")\noz_climate", 
+learnr:::store_exercise_cache("exercise0A", list(setup = NULL, chunks = list(list(label = "exercise0A", code = "data(oz_climate, package = \"dwexercise\")\noz_climate[1:3, ]\n# Note printing the whole data causes: \n# Error : pandoc document conversion failed with error 137\n# looks like some issue with learnr?", 
     opts = list(label = "\"exercise0A\"", exercise = "TRUE"), 
     engine = "r")), code_check = NULL, error_check = NULL, check = NULL, 
     solution = NULL, options = list(eval = FALSE, echo = TRUE, 
@@ -419,9 +403,11 @@ learnr:::store_exercise_cache("exercise0A", list(setup = NULL, chunks = list(lis
         exercise.checker = "function (label = NULL, solution_code = NULL, user_code = NULL, \n    check_code = NULL, envir_result = NULL, evaluate_result = NULL, \n    envir_prep = NULL, last_value = NULL, ...) \n{\n    (utils::getFromNamespace(\"grade_learnr_\", \"gradethis\"))(label = label, \n        solution_code = solution_code, user_code = user_code, \n        check_code = check_code, envir_result = envir_result, \n        evaluate_result = evaluate_result, envir_prep = envir_prep, \n        last_value = last_value, ...)\n}", 
         exercise.error.check.code = "grade_code()", exercise.eval = FALSE, 
         label = "exercise0A", exercise = TRUE, code = c("data(oz_climate, package = \"dwexercise\")", 
-        "oz_climate"), out.width.px = 624, out.height.px = 384, 
-        params.src = "exercise0A, exercise = TRUE", fig.num = 0, 
-        exercise.df_print = "paged"), engine = "r"))
+        "oz_climate[1:3, ]", "# Note printing the whole data causes: ", 
+        "# Error : pandoc document conversion failed with error 137", 
+        "# looks like some issue with learnr?"), out.width.px = 624, 
+        out.height.px = 384, params.src = "exercise0A, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -718,7 +704,7 @@ learnr:::store_exercise_cache("exercise3", list(setup = NULL, chunks = list(list
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82]}},"value":[{"type":"character","attributes":{},"value":["agridat","assertthat","backports","base","broom","cellranger","cli","colorspace","compiler","crayon","curl","datasets","DBI","dbplyr","digest","dplyr","dwexercise","ellipsis","evaluate","fansi","fastmap","forcats","fs","generics","ggplot2","glue","gradethis","graphics","grDevices","grid","gtable","haven","hms","htmltools","htmlwidgets","httpuv","httr","janitor","jsonlite","knitr","later","learnr","lifecycle","lubridate","magrittr","markdown","methods","mime","modelr","munsell","pillar","pkgconfig","promises","purrr","R6","Rcpp","readr","readxl","reprex","rlang","rmarkdown","rprojroot","rstudioapi","rvest","scales","shiny","snakecase","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["1.17","0.2.1","1.2.0","4.0.1","0.7.2","1.1.0","2.2.0","2.0-0","4.0.1","1.3.4","4.3","4.0.1","1.1.0","2.0.0","0.6.27","1.0.2","0.1.0","0.3.1","0.14","0.4.1","1.0.1","0.5.0","1.5.0","0.1.0","3.3.2","1.4.2","0.2.0.9000","4.0.1","4.0.1","4.0.1","0.3.0","2.3.1","0.5.3","0.5.0","1.5.2","1.5.4","1.4.2","2.0.1","1.7.1","1.30","1.1.0.1","0.10.1.9006","0.2.0","1.7.9","2.0.1","1.1","4.0.1","0.9","0.1.8","0.5.0","1.4.7","2.0.3","1.1.1","0.3.4","2.5.0","1.0.5","1.4.0","1.3.1","0.3.0.9001","0.4.8","2.5","2.0.2","0.13","0.3.6","1.1.1","1.5.0","0.11.0","4.0.1","1.5.3","1.4.0","3.0.4.9000","1.1.2","1.1.0","1.3.0","4.0.1","4.0.1","0.3.5.9000","2.3.0","0.19","1.3.2","1.8-4","2.2.1"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","broom","cellranger","cli","colorspace","compiler","crayon","curl","datasets","DBI","dbplyr","digest","dplyr","dwexercise","ellipsis","evaluate","fansi","fastmap","forcats","fs","generics","ggplot2","glue","gradethis","graphics","grDevices","grid","gtable","haven","hms","htmltools","htmlwidgets","httpuv","httr","janitor","jsonlite","knitr","later","learnr","lifecycle","lubridate","magrittr","markdown","methods","mime","modelr","munsell","pillar","pkgconfig","promises","purrr","R6","Rcpp","readr","readxl","reprex","rlang","rmarkdown","rprojroot","rstudioapi","rvest","scales","shiny","snakecase","stats","stringi","stringr","tibble","tidyr","tidyselect","tidyverse","tools","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.2.0","4.0.1","0.7.2","1.1.0","2.2.0","2.0-0","4.0.1","1.3.4","4.3","4.0.1","1.1.0","2.0.0","0.6.27","1.0.2","0.1.0","0.3.1","0.14","0.4.1","1.0.1","0.5.0","1.5.0","0.1.0","3.3.2","1.4.2","0.2.0.9000","4.0.1","4.0.1","4.0.1","0.3.0","2.3.1","0.5.3","0.5.0","1.5.2","1.5.4","1.4.2","2.0.1","1.7.1","1.30","1.1.0.1","0.10.1.9006","0.2.0","1.7.9","2.0.1","1.1","4.0.1","0.9","0.1.8","0.5.0","1.4.7","2.0.3","1.1.1","0.3.4","2.5.0","1.0.5","1.4.0","1.3.1","0.3.0.9001","0.4.8","2.5","2.0.2","0.13","0.3.6","1.1.1","1.5.0","0.11.0","4.0.1","1.5.3","1.4.0","3.0.4.9000","1.1.2","1.1.0","1.3.0","4.0.1","4.0.1","0.3.5.9000","2.3.0","0.19","1.3.2","1.8-4","2.2.1"]}]}]}
 </script>
 <!--/html_preserve-->
 </div>
