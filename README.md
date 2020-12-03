@@ -10,7 +10,7 @@ remotes::install_github("rstudio-education/gradethis")
 You can install this workshop package as below.
 
 ```r
-remotes::install_github("emitanaka/dwexercise")
+remotes::install_github("emitanaka/dwexercise", ref = "workshop-2020-12")
 ```
 
 In order to launch the exercises, use one of the commands below.
